@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fatura Fácil</title>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#12395b">
+<style>
+body{margin:0;font-family:Arial,sans-serif;background:#f3f6fa;color:#1f2933;padding-bottom:90px}
+header{background:#12395b;color:white;padding:22px;border-radius:0 0 22px 22px}
+h1{margin:0;font-size:26px}
+main{padding:14px}
+.card{background:white;border-radius:16px;padding:16px;margin-bottom:14px;box-shadow:0 4px 14px #0002;overflow-x:auto}
+input,select,button{width:100%;padding:12px;margin-top:6px;border-radius:10px;border:1px solid #ccc;font-size:15px;box-sizing:border-box}
+button{background:#12395b;color:white;border:0;font-weight:bold}
+.nav{position:fixed;bottom:0;left:0;right:0;background:white;display:grid;grid-template-columns:repeat(4,1fr);gap:4px;padding:8px;box-shadow:0 -3px 15px #0002}
+.nav button{font-size:12px;background:#e8eef5;color:#12395b;padding:10px 4px}
+.nav button.ativo{background:#12395b;color:white}
+.tela{display:none}
+.tela.ativa{display:block}
+table{width:100%;border-collapse:collapse;margin-top:10px;min-width:520px}
+td,th{border-bottom:1px solid #ddd;padding:8px;font-size:13px;text-align:left;white-space:nowrap}
+.alerta{padding:10px;border-radius:10px;margin-top:10px;font-weight:bold}
+.ok{background:#dcfce7;color:#166534}
+.atencao{background:#fef3c7;color:#92400e}
+.perigo{background:#fee2e2;color:#991b1b}
+.valor{font-size:32px;font-weight:bold;color:#12395b}
+.verde{color:#166534;font-weight:bold}
+.amarelo{color:#d97706;font-weight:bold}
+.vermelho{color:#b91c1c;font-weight:bold}
+@media(max-width:600px){
+  table{min-width:620px}
+  td,th{font-size:12px;padding:7px}
+}
+</style>
+</head>
+<body>
+
+<header>
+<h1>💳 Fatura Fácil</h1>
+<p>Controle sua fatura do dia 13 ao dia 13</p>
+</header>
+
+<main>
+<section id="inicio" class="tela ativa">
+<div class="card">
+<h2>Dashboard</h2>
+<label>Data dentro da fatura</label>
+<input type="date" id="dataFiltro">
+<p id="periodo"></p>
+<p>Fatura atual</p>
+<div class="valor" id="totalFatura">R$ 0,00</div>
+<p>Planejado: <b id="planejadoTotal">R$ 0,00</b></p>
+<p>Restante: <b id="saldoTotal">R$ 0,00</b></p>
+<div id="alertas"></div>
+</div>
+
+<div class="card">
+<h2>Resumo por categoria</h2>
+<p style="font-size:12px;color:#6b7280">Arraste a tabela para o lado se necessário.</p>
+<table>
+<thead><tr><th>Categoria</th><th>Gasto</th><th>Limite</th><th>Falta gastar</th><th>Uso</th></tr></thead>
+<tbody id="resumoCategorias"></tbody>
+</table>
+</div>
+</section>
+
+<section id="gasto" class="tela">
+<div class="card">
+<h2>Novo gasto</h2>
+<label>Data</label>
+<input type="date" id="dataGasto">
+<label>Descrição</label>
+<input id="descricao" placeholder="Ex: Mercado">
+<label>Categoria</label>
+<select id="categoria"></select>
+<label>Valor R$</label>
+<input type="number" id="valor" step="0.01" placeholder="0,00">
+<button onclick="adicionarGasto()">Adicionar gasto</button>
+</div>
+
+<div class="card">
+<h2>Posso comprar?</h2>
+<label>Valor da compra</label>
+<input type="number" id="valorSimular" step="0.01">
+<label>Categoria</label>
+<select id="categoriaSimular"></select>
+<button onclick="simular()">Simular</button>
+<div id="resultadoSimulacao"></div>
+</div>
+</section>
+
+<section id="categorias" class="tela">
+<div class="card">
+<h2>Adicionar categoria</h2>
+<label>Nome</label>
+<input id="novaCategoria" placeholder="Ex: Farmácia">
+<label>Planejado R$</label>
+<input type="number" id="novoPlanejado" step="0.01">
+<button onclick="adicionarCategoria()">Adicionar categoria</button>
+</div>
+
+<div class="card">
+<h2>Categorias</h2>
+<table>
+<thead><tr><th>Categoria</th><th>Planejado</th><th>Ação</th></tr></thead>
+<tbody id="listaCategorias"></tbody>
+</table>
+</div>
+</section>
+
+<section id="historico" class="tela">
+<div class="card">
+<h2>Histórico</h2>
+<label>Pesquisar</label>
+<input id="pesquisa" oninput="atualizarTudo()" placeholder="Buscar gasto">
+<table>
+<thead><tr><th>Data</th><th>Descrição</th><th>Categoria</th><th>Valor</th><th></th></tr></thead>
+<tbody id="listaGastos"></tbody>
+</table>
+</div>
+<div class="card">
+<button onclick="exportarCSV()">Exportar CSV</button>
+<br><br>
+<button style="background:#b91c1c" onclick="apagarGastos()">Apagar gastos</button>
+</div>
+</section>
+</main>
+
+<div class="nav">
+<button id="btn-inicio" class="ativo" onclick="abrir('inicio')">🏠<br>Início</button>
+<button id="btn-gasto" onclick="abrir('gasto')">➕<br>Gasto</button>
+<button id="btn-categorias" onclick="abrir('categorias')">📂<br>Categorias</button>
+<button id="btn-historico" onclick="abrir('historico')">📋<br>Histórico</button>
+</div>
+
+<script>
+let categorias=JSON.parse(localStorage.getItem("ff_cat"))||[
+{nome:"Mercado",planejado:1200},{nome:"Alimentação",planejado:600},{nome:"Combustível",planejado:600},{nome:"Farmácia",planejado:250},{nome:"Casa",planejado:400},{nome:"Lazer",planejado:300},{nome:"Outros",planejado:300}
+];
+let gastos=JSON.parse(localStorage.getItem("ff_gastos"))||[];
+
+document.getElementById("dataFiltro").valueAsDate=new Date();
+document.getElementById("dataGasto").valueAsDate=new Date();
+
+function abrir(tela){
+document.querySelectorAll(".tela").forEach(x=>x.classList.remove("ativa"));
+document.getElementById(tela).classList.add("ativa");
+document.querySelectorAll(".nav button").forEach(x=>x.classList.remove("ativo"));
+document.getElementById("btn-"+tela).classList.add("ativo");
+atualizarTudo();
+}
+
+function salvar(){localStorage.setItem("ff_cat",JSON.stringify(categorias));localStorage.setItem("ff_gastos",JSON.stringify(gastos));}
+function moeda(v){return Number(v||0).toLocaleString("pt-BR",{style:"currency",currency:"BRL"});}
+
+function periodo(){
+let d=new Date(document.getElementById("dataFiltro").value+"T00:00:00");
+let ini,fim;
+if(d.getDate()>=13){ini=new Date(d.getFullYear(),d.getMonth(),13);fim=new Date(d.getFullYear(),d.getMonth()+1,13);}
+else{ini=new Date(d.getFullYear(),d.getMonth()-1,13);fim=new Date(d.getFullYear(),d.getMonth(),13);}
+return{ini,fim};
+}
+
+function gastosFatura(){
+let p=periodo();
+return gastos.filter(g=>{
+let d=new Date(g.data+"T00:00:00");
+return d>=p.ini && d<=p.fim;
+});
+}
+
+function totalCat(){
+let o={};
+gastosFatura().forEach(g=>o[g.categoria]=(o[g.categoria]||0)+Number(g.valor));
+return o;
+}
+
+function atualizarSelects(){
+["categoria","categoriaSimular"].forEach(id=>{
+let s=document.getElementById(id);
+let atual=s.value;
+s.innerHTML="";
+categorias.forEach(c=>{
+let op=document.createElement("option");
+op.value=c.nome;op.textContent=c.nome;s.appendChild(op);
+});
+if(categorias.some(c=>c.nome===atual))s.value=atual;
+});
+}
+
+function adicionarGasto(){
+let data=document.getElementById("dataGasto").value;
+let descricao=document.getElementById("descricao").value.trim();
+let categoria=document.getElementById("categoria").value;
+let valor=Number(document.getElementById("valor").value);
+if(!data||!descricao||!categoria||valor<=0){alert("Preencha todos os campos.");return;}
+gastos.push({data,descricao,categoria,valor});
+salvar();
+document.getElementById("descricao").value="";
+document.getElementById("valor").value="";
+atualizarTudo();
+alert("Gasto adicionado.");
+}
+
+function adicionarCategoria(){
+let nome=document.getElementById("novaCategoria").value.trim();
+let planejado=Number(document.getElementById("novoPlanejado").value)||0;
+if(!nome){alert("Digite o nome da categoria.");return;}
+if(categorias.some(c=>c.nome.toLowerCase()===nome.toLowerCase())){alert("Categoria já existe.");return;}
+categorias.push({nome,planejado});
+salvar();
+document.getElementById("novaCategoria").value="";
+document.getElementById("novoPlanejado").value="";
+atualizarTudo();
+}
+
+function editarCategoria(i,campo,valor){
+if(campo==="nome"){
+let antigo=categorias[i].nome;
+if(!valor.trim()){atualizarTudo();return;}
+categorias[i].nome=valor.trim();
+gastos.forEach(g=>{if(g.categoria===antigo)g.categoria=valor.trim();});
+}else{
+categorias[i].planejado=Number(valor)||0;
+}
+salvar();atualizarTudo();
+}
+
+function excluirCategoria(i){
+let nome=categorias[i].nome;
+if(gastos.some(g=>g.categoria===nome)){alert("Categoria com gastos não pode ser excluída.");return;}
+if(confirm("Excluir categoria?")){categorias.splice(i,1);salvar();atualizarTudo();}
+}
+
+function excluirGasto(i){
+if(confirm("Excluir gasto?")){gastos.splice(i,1);salvar();atualizarTudo();}
+}
+
+function atualizarTudo(){
+atualizarSelects();
+let gf=gastosFatura();
+let total=gf.reduce((s,g)=>s+Number(g.valor),0);
+let planejado=categorias.reduce((s,c)=>s+Number(c.planejado||0),0);
+let saldo=planejado-total;
+let p=periodo();
+document.getElementById("periodo").innerText="Fatura: "+p.ini.toLocaleDateString("pt-BR")+" até "+p.fim.toLocaleDateString("pt-BR");
+document.getElementById("totalFatura").innerText=moeda(total);
+document.getElementById("planejadoTotal").innerText=moeda(planejado);
+document.getElementById("saldoTotal").innerText=moeda(saldo);
+
+let tc=totalCat();
+let resumo="";
+let alertas="";
+categorias.forEach(c=>{
+let gasto=tc[c.nome]||0;
+let falta=Number(c.planejado||0)-gasto;
+let uso=c.planejado>0?Math.round(gasto/c.planejado*100):0;
+let classe=uso>=100?"vermelho":uso>=80?"amarelo":"verde";
+let classeFalta=falta<0?"vermelho":"verde";
+resumo+=`<tr><td>${c.nome}</td><td>${moeda(gasto)}</td><td>${moeda(c.planejado)}</td><td class="${classeFalta}">${falta>=0?moeda(falta):"Estourou "+moeda(Math.abs(falta))}</td><td class="${classe}">${c.planejado>0?uso+"%":"-"}</td></tr>`;
+if(c.planejado>0&&uso>=100)alertas+=`<div class="alerta perigo">🚨 ${c.nome} passou do planejado.</div>`;
+else if(c.planejado>0&&uso>=80)alertas+=`<div class="alerta atencao">⚠️ ${c.nome} já usou ${uso}% do planejado.</div>`;
+});
+document.getElementById("resumoCategorias").innerHTML=resumo;
+document.getElementById("alertas").innerHTML=alertas||'<div class="alerta ok">✅ Tudo dentro do planejado.</div>';
+
+let listaCat="";
+categorias.forEach((c,i)=>{
+listaCat+=`<tr><td><input value="${c.nome}" onchange="editarCategoria(${i},'nome',this.value)"></td><td><input type="number" value="${c.planejado}" onchange="editarCategoria(${i},'planejado',this.value)"></td><td><button style="background:#b91c1c" onclick="excluirCategoria(${i})">Excluir</button></td></tr>`;
+});
+document.getElementById("listaCategorias").innerHTML=listaCat;
+
+let termo=(document.getElementById("pesquisa")?.value||"").toLowerCase();
+let lista="";
+gf.filter(g=>g.descricao.toLowerCase().includes(termo)||g.categoria.toLowerCase().includes(termo)).sort((a,b)=>b.data.localeCompare(a.data)).forEach(g=>{
+let i=gastos.indexOf(g);
+lista+=`<tr><td>${new Date(g.data+"T00:00:00").toLocaleDateString("pt-BR")}</td><td>${g.descricao}</td><td>${g.categoria}</td><td>${moeda(g.valor)}</td><td><button style="background:#b91c1c" onclick="excluirGasto(${i})">X</button></td></tr>`;
+});
+document.getElementById("listaGastos").innerHTML=lista;
+}
+
+function simular(){
+let valor=Number(document.getElementById("valorSimular").value);
+let categoria=document.getElementById("categoriaSimular").value;
+if(valor<=0){alert("Digite um valor.");return;}
+let tc=totalCat();
+let cat=categorias.find(c=>c.nome===categoria);
+let saldoCat=(cat.planejado||0)-((tc[categoria]||0)+valor);
+document.getElementById("resultadoSimulacao").innerHTML=saldoCat>=0?`<div class="alerta ok">✅ Pode comprar. Restará ${moeda(saldoCat)} na categoria.</div>`:`<div class="alerta perigo">⚠️ Vai ultrapassar a categoria em ${moeda(Math.abs(saldoCat))}.</div>`;
+}
+
+function exportarCSV(){
+let csv="Data;Descrição;Categoria;Valor\n";
+gastos.forEach(g=>csv+=`${g.data};${g.descricao};${g.categoria};${String(g.valor).replace(".",",")}\n`);
+let blob=new Blob([csv],{type:"text/csv;charset=utf-8;"});
+let a=document.createElement("a");
+a.href=URL.createObjectURL(blob);a.download="fatura_facil.csv";a.click();
+}
+
+function apagarGastos(){
+if(confirm("Apagar todos os gastos?")){gastos=[];salvar();atualizarTudo();}
+}
+
+document.getElementById("dataFiltro").addEventListener("change",atualizarTudo);
+atualizarTudo();
+
+if ("serviceWorker" in navigator) {
+  navigator.serviceWorker.register("service-worker.js");
+}
+</script>
+</body>
+</html>

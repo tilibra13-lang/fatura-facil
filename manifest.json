@@ -1,0 +1,11 @@
+{
+  "name": "Fatura Fácil",
+  "short_name": "Fatura Fácil",
+  "description": "Controle pessoal da fatura do cartão de crédito.",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#f3f6fa",
+  "theme_color": "#12395b",
+  "orientation": "portrait",
+  "icons": []
+}
