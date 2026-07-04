@@ -6,59 +6,70 @@
 <title>Fatura Fácil</title>
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#12395b">
+<meta name="description" content="Controle pessoal da fatura do cartão de crédito.">
 <style>
-body{margin:0;font-family:Arial,sans-serif;background:#f3f6fa;color:#1f2933;padding-bottom:90px}
-header{background:#12395b;color:white;padding:22px;border-radius:0 0 22px 22px}
-h1{margin:0;font-size:26px}
-main{padding:14px}
-.card{background:white;border-radius:16px;padding:16px;margin-bottom:14px;box-shadow:0 4px 14px #0002;overflow-x:auto}
-input,select,button{width:100%;padding:12px;margin-top:6px;border-radius:10px;border:1px solid #ccc;font-size:15px;box-sizing:border-box}
-button{background:#12395b;color:white;border:0;font-weight:bold}
-.nav{position:fixed;bottom:0;left:0;right:0;background:white;display:grid;grid-template-columns:repeat(4,1fr);gap:4px;padding:8px;box-shadow:0 -3px 15px #0002}
-.nav button{font-size:12px;background:#e8eef5;color:#12395b;padding:10px 4px}
-.nav button.ativo{background:#12395b;color:white}
-.tela{display:none}
-.tela.ativa{display:block}
-table{width:100%;border-collapse:collapse;margin-top:10px;min-width:520px}
-td,th{border-bottom:1px solid #ddd;padding:8px;font-size:13px;text-align:left;white-space:nowrap}
-.alerta{padding:10px;border-radius:10px;margin-top:10px;font-weight:bold}
-.ok{background:#dcfce7;color:#166534}
-.atencao{background:#fef3c7;color:#92400e}
-.perigo{background:#fee2e2;color:#991b1b}
-.valor{font-size:32px;font-weight:bold;color:#12395b}
-.verde{color:#166534;font-weight:bold}
-.amarelo{color:#d97706;font-weight:bold}
-.vermelho{color:#b91c1c;font-weight:bold}
-@media(max-width:600px){
-  table{min-width:620px}
-  td,th{font-size:12px;padding:7px}
+:root{
+--azul:#12395b;--azul2:#1f5f8b;--fundo:#f3f6fa;--card:#fff;--texto:#1f2933;
+--verde:#166534;--amarelo:#d97706;--vermelho:#b91c1c;--cinza:#6b7280;
 }
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,sans-serif;background:var(--fundo);color:var(--texto);padding-bottom:92px}
+header{background:linear-gradient(135deg,var(--azul),var(--azul2));color:white;padding:22px;border-radius:0 0 24px 24px}
+h1{margin:0;font-size:26px}
+header p{margin:6px 0 0;font-size:14px;opacity:.9}
+main{padding:14px;max-width:980px;margin:auto}
+.card{background:white;border-radius:18px;padding:16px;margin-bottom:14px;box-shadow:0 4px 18px #0002;overflow-x:auto}
+input,select,button,textarea{width:100%;padding:12px;margin-top:6px;border-radius:12px;border:1px solid #d1d5db;font-size:15px}
+button{background:var(--azul);color:white;border:0;font-weight:bold}
+button.sec{background:#475569}
+button.danger{background:var(--vermelho)}
+.nav{position:fixed;bottom:0;left:0;right:0;background:white;display:grid;grid-template-columns:repeat(5,1fr);gap:4px;padding:8px;box-shadow:0 -3px 18px #0002;z-index:10}
+.nav button{font-size:11px;background:#e8eef5;color:#12395b;padding:9px 3px}
+.nav button.ativo{background:#12395b;color:white}
+.tela{display:none}.tela.ativa{display:block}
+.valor{font-size:34px;font-weight:800;color:#12395b;margin:6px 0}
+.kpi{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+.kpi div{background:#f1f5f9;border-radius:14px;padding:12px}
+.kpi span{display:block;font-size:12px;color:#64748b}.kpi b{display:block;margin-top:5px;color:#12395b}
+table{width:100%;border-collapse:collapse;margin-top:10px;min-width:700px}
+td,th{border-bottom:1px solid #e5e7eb;padding:8px;font-size:12px;text-align:left;white-space:nowrap}
+.alerta{padding:10px;border-radius:12px;margin-top:10px;font-weight:bold}
+.ok{background:#dcfce7;color:#166534}.atencao{background:#fef3c7;color:#92400e}.perigo{background:#fee2e2;color:#991b1b}
+.verde{color:var(--verde);font-weight:bold}.amarelo{color:var(--amarelo);font-weight:bold}.vermelho{color:var(--vermelho);font-weight:bold}
+.info{font-size:13px;color:#6b7280}
+.form2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.badge{display:inline-block;background:#e0f2fe;color:#075985;border-radius:999px;padding:4px 10px;font-size:12px;font-weight:bold}
+@media(max-width:700px){.kpi,.form2{grid-template-columns:1fr}table{min-width:720px}}
 </style>
 </head>
 <body>
-
 <header>
 <h1>💳 Fatura Fácil</h1>
-<p>Controle sua fatura do dia 13 ao dia 13</p>
+<p id="subtitulo">Controle sua fatura</p>
 </header>
 
 <main>
 <section id="inicio" class="tela ativa">
 <div class="card">
+<span class="badge" id="versao">V1.5 PWA</span>
 <h2>Dashboard</h2>
 <label>Data dentro da fatura</label>
 <input type="date" id="dataFiltro">
-<p id="periodo"></p>
+<p id="periodo" class="info"></p>
 <p>Fatura atual</p>
 <div class="valor" id="totalFatura">R$ 0,00</div>
-<p>Planejado: <b id="planejadoTotal">R$ 0,00</b></p>
-<p>Restante: <b id="saldoTotal">R$ 0,00</b></p>
+<div class="kpi">
+<div><span>Planejado</span><b id="planejadoTotal">R$ 0,00</b></div>
+<div><span>Restante</span><b id="saldoTotal">R$ 0,00</b></div>
+<div><span>Dias até fechamento</span><b id="diasFechamento">0 dias</b></div>
+<div><span>Pode gastar por dia</span><b id="porDia">R$ 0,00</b></div>
+</div>
 <div id="alertas"></div>
 </div>
 
 <div class="card">
 <h2>Resumo por categoria</h2>
-<p style="font-size:12px;color:#6b7280">Arraste a tabela para o lado se necessário.</p>
+<p class="info">Arraste a tabela para o lado se necessário.</p>
 <table>
 <thead><tr><th>Categoria</th><th>Gasto</th><th>Limite</th><th>Falta gastar</th><th>Uso</th></tr></thead>
 <tbody id="resumoCategorias"></tbody>
@@ -69,24 +80,22 @@ td,th{border-bottom:1px solid #ddd;padding:8px;font-size:13px;text-align:left;wh
 <section id="gasto" class="tela">
 <div class="card">
 <h2>Novo gasto</h2>
-<label>Data</label>
-<input type="date" id="dataGasto">
-<label>Descrição</label>
-<input id="descricao" placeholder="Ex: Mercado">
-<label>Categoria</label>
-<select id="categoria"></select>
-<label>Valor R$</label>
-<input type="number" id="valor" step="0.01" placeholder="0,00">
+<div class="form2">
+<div><label>Data</label><input type="date" id="dataGasto"></div>
+<div><label>Valor R$</label><input type="number" id="valor" step="0.01" placeholder="0,00"></div>
+</div>
+<label>Descrição</label><input id="descricao" placeholder="Ex: Mercado">
+<label>Categoria</label><select id="categoria"></select>
 <button onclick="adicionarGasto()">Adicionar gasto</button>
 </div>
 
 <div class="card">
 <h2>Posso comprar?</h2>
-<label>Valor da compra</label>
-<input type="number" id="valorSimular" step="0.01">
-<label>Categoria</label>
-<select id="categoriaSimular"></select>
-<button onclick="simular()">Simular</button>
+<div class="form2">
+<div><label>Valor da compra</label><input type="number" id="valorSimular" step="0.01"></div>
+<div><label>Categoria</label><select id="categoriaSimular"></select></div>
+</div>
+<button class="sec" onclick="simular()">Simular</button>
 <div id="resultadoSimulacao"></div>
 </div>
 </section>
@@ -94,36 +103,54 @@ td,th{border-bottom:1px solid #ddd;padding:8px;font-size:13px;text-align:left;wh
 <section id="categorias" class="tela">
 <div class="card">
 <h2>Adicionar categoria</h2>
-<label>Nome</label>
-<input id="novaCategoria" placeholder="Ex: Farmácia">
-<label>Planejado R$</label>
-<input type="number" id="novoPlanejado" step="0.01">
+<div class="form2">
+<div><label>Nome</label><input id="novaCategoria" placeholder="Ex: Farmácia"></div>
+<div><label>Planejado R$</label><input type="number" id="novoPlanejado" step="0.01"></div>
+</div>
 <button onclick="adicionarCategoria()">Adicionar categoria</button>
 </div>
 
 <div class="card">
 <h2>Categorias</h2>
-<table>
-<thead><tr><th>Categoria</th><th>Planejado</th><th>Ação</th></tr></thead>
-<tbody id="listaCategorias"></tbody>
-</table>
+<table><thead><tr><th>Categoria</th><th>Planejado</th><th>Ação</th></tr></thead><tbody id="listaCategorias"></tbody></table>
 </div>
 </section>
 
 <section id="historico" class="tela">
 <div class="card">
 <h2>Histórico</h2>
-<label>Pesquisar</label>
-<input id="pesquisa" oninput="atualizarTudo()" placeholder="Buscar gasto">
-<table>
-<thead><tr><th>Data</th><th>Descrição</th><th>Categoria</th><th>Valor</th><th></th></tr></thead>
-<tbody id="listaGastos"></tbody>
-</table>
+<label>Pesquisar</label><input id="pesquisa" oninput="atualizarTudo()" placeholder="Buscar gasto">
+<table><thead><tr><th>Data</th><th>Descrição</th><th>Categoria</th><th>Valor</th><th></th></tr></thead><tbody id="listaGastos"></tbody></table>
 </div>
 <div class="card">
 <button onclick="exportarCSV()">Exportar CSV</button>
 <br><br>
-<button style="background:#b91c1c" onclick="apagarGastos()">Apagar gastos</button>
+<button class="danger" onclick="apagarGastos()">Apagar gastos</button>
+</div>
+</section>
+
+<section id="config" class="tela">
+<div class="card">
+<h2>Configurações</h2>
+<p class="info">Escolha o dia de fechamento. Exemplo: 12 = fatura de 12 a 12; 05 = fatura de 05 a 05.</p>
+<label>Dia de fechamento da fatura</label>
+<select id="diaFechamento"></select>
+<button onclick="salvarConfig()">Salvar configuração</button>
+<div id="msgConfig"></div>
+</div>
+
+<div class="card">
+<h2>Backup dos dados</h2>
+<p class="info">Use para guardar uma cópia dos seus gastos e categorias.</p>
+<button onclick="baixarBackup()">Baixar backup</button>
+<label>Restaurar backup</label>
+<input type="file" id="arquivoBackup" accept=".json" onchange="restaurarBackup(event)">
+</div>
+
+<div class="card">
+<h2>Configuração atual</h2>
+<p>Fechamento configurado: <b id="fechamentoAtual"></b></p>
+<p class="info">Os dados ficam salvos no navegador/celular.</p>
 </div>
 </section>
 </main>
@@ -131,184 +158,48 @@ td,th{border-bottom:1px solid #ddd;padding:8px;font-size:13px;text-align:left;wh
 <div class="nav">
 <button id="btn-inicio" class="ativo" onclick="abrir('inicio')">🏠<br>Início</button>
 <button id="btn-gasto" onclick="abrir('gasto')">➕<br>Gasto</button>
-<button id="btn-categorias" onclick="abrir('categorias')">📂<br>Categorias</button>
-<button id="btn-historico" onclick="abrir('historico')">📋<br>Histórico</button>
+<button id="btn-categorias" onclick="abrir('categorias')">📂<br>Cat.</button>
+<button id="btn-historico" onclick="abrir('historico')">📋<br>Hist.</button>
+<button id="btn-config" onclick="abrir('config')">⚙️<br>Config.</button>
 </div>
 
 <script>
 let categorias=JSON.parse(localStorage.getItem("ff_cat"))||[
-{nome:"Mercado",planejado:1200},{nome:"Alimentação",planejado:600},{nome:"Combustível",planejado:600},{nome:"Farmácia",planejado:250},{nome:"Casa",planejado:400},{nome:"Lazer",planejado:300},{nome:"Outros",planejado:300}
-];
+{nome:"Mercado",planejado:1200},{nome:"Alimentação",planejado:600},{nome:"Combustível",planejado:600},
+{nome:"Farmácia",planejado:250},{nome:"Casa",planejado:400},{nome:"Lazer",planejado:300},{nome:"Outros",planejado:300}];
 let gastos=JSON.parse(localStorage.getItem("ff_gastos"))||[];
+let config=JSON.parse(localStorage.getItem("ff_config"))||{diaFechamento:13};
 
 document.getElementById("dataFiltro").valueAsDate=new Date();
 document.getElementById("dataGasto").valueAsDate=new Date();
 
-function abrir(tela){
-document.querySelectorAll(".tela").forEach(x=>x.classList.remove("ativa"));
-document.getElementById(tela).classList.add("ativa");
-document.querySelectorAll(".nav button").forEach(x=>x.classList.remove("ativo"));
-document.getElementById("btn-"+tela).classList.add("ativo");
-atualizarTudo();
-}
-
-function salvar(){localStorage.setItem("ff_cat",JSON.stringify(categorias));localStorage.setItem("ff_gastos",JSON.stringify(gastos));}
-function moeda(v){return Number(v||0).toLocaleString("pt-BR",{style:"currency",currency:"BRL"});}
-
-function periodo(){
-let d=new Date(document.getElementById("dataFiltro").value+"T00:00:00");
-let ini,fim;
-if(d.getDate()>=13){ini=new Date(d.getFullYear(),d.getMonth(),13);fim=new Date(d.getFullYear(),d.getMonth()+1,13);}
-else{ini=new Date(d.getFullYear(),d.getMonth()-1,13);fim=new Date(d.getFullYear(),d.getMonth(),13);}
-return{ini,fim};
-}
-
-function gastosFatura(){
-let p=periodo();
-return gastos.filter(g=>{
-let d=new Date(g.data+"T00:00:00");
-return d>=p.ini && d<=p.fim;
-});
-}
-
-function totalCat(){
-let o={};
-gastosFatura().forEach(g=>o[g.categoria]=(o[g.categoria]||0)+Number(g.valor));
-return o;
-}
-
-function atualizarSelects(){
-["categoria","categoriaSimular"].forEach(id=>{
-let s=document.getElementById(id);
-let atual=s.value;
-s.innerHTML="";
-categorias.forEach(c=>{
-let op=document.createElement("option");
-op.value=c.nome;op.textContent=c.nome;s.appendChild(op);
-});
-if(categorias.some(c=>c.nome===atual))s.value=atual;
-});
-}
-
-function adicionarGasto(){
-let data=document.getElementById("dataGasto").value;
-let descricao=document.getElementById("descricao").value.trim();
-let categoria=document.getElementById("categoria").value;
-let valor=Number(document.getElementById("valor").value);
-if(!data||!descricao||!categoria||valor<=0){alert("Preencha todos os campos.");return;}
-gastos.push({data,descricao,categoria,valor});
-salvar();
-document.getElementById("descricao").value="";
-document.getElementById("valor").value="";
-atualizarTudo();
-alert("Gasto adicionado.");
-}
-
-function adicionarCategoria(){
-let nome=document.getElementById("novaCategoria").value.trim();
-let planejado=Number(document.getElementById("novoPlanejado").value)||0;
-if(!nome){alert("Digite o nome da categoria.");return;}
-if(categorias.some(c=>c.nome.toLowerCase()===nome.toLowerCase())){alert("Categoria já existe.");return;}
-categorias.push({nome,planejado});
-salvar();
-document.getElementById("novaCategoria").value="";
-document.getElementById("novoPlanejado").value="";
-atualizarTudo();
-}
-
-function editarCategoria(i,campo,valor){
-if(campo==="nome"){
-let antigo=categorias[i].nome;
-if(!valor.trim()){atualizarTudo();return;}
-categorias[i].nome=valor.trim();
-gastos.forEach(g=>{if(g.categoria===antigo)g.categoria=valor.trim();});
-}else{
-categorias[i].planejado=Number(valor)||0;
-}
-salvar();atualizarTudo();
-}
-
-function excluirCategoria(i){
-let nome=categorias[i].nome;
-if(gastos.some(g=>g.categoria===nome)){alert("Categoria com gastos não pode ser excluída.");return;}
-if(confirm("Excluir categoria?")){categorias.splice(i,1);salvar();atualizarTudo();}
-}
-
-function excluirGasto(i){
-if(confirm("Excluir gasto?")){gastos.splice(i,1);salvar();atualizarTudo();}
-}
-
-function atualizarTudo(){
-atualizarSelects();
-let gf=gastosFatura();
-let total=gf.reduce((s,g)=>s+Number(g.valor),0);
-let planejado=categorias.reduce((s,c)=>s+Number(c.planejado||0),0);
-let saldo=planejado-total;
-let p=periodo();
-document.getElementById("periodo").innerText="Fatura: "+p.ini.toLocaleDateString("pt-BR")+" até "+p.fim.toLocaleDateString("pt-BR");
-document.getElementById("totalFatura").innerText=moeda(total);
-document.getElementById("planejadoTotal").innerText=moeda(planejado);
-document.getElementById("saldoTotal").innerText=moeda(saldo);
-
-let tc=totalCat();
-let resumo="";
-let alertas="";
-categorias.forEach(c=>{
-let gasto=tc[c.nome]||0;
-let falta=Number(c.planejado||0)-gasto;
-let uso=c.planejado>0?Math.round(gasto/c.planejado*100):0;
-let classe=uso>=100?"vermelho":uso>=80?"amarelo":"verde";
-let classeFalta=falta<0?"vermelho":"verde";
-resumo+=`<tr><td>${c.nome}</td><td>${moeda(gasto)}</td><td>${moeda(c.planejado)}</td><td class="${classeFalta}">${falta>=0?moeda(falta):"Estourou "+moeda(Math.abs(falta))}</td><td class="${classe}">${c.planejado>0?uso+"%":"-"}</td></tr>`;
-if(c.planejado>0&&uso>=100)alertas+=`<div class="alerta perigo">🚨 ${c.nome} passou do planejado.</div>`;
-else if(c.planejado>0&&uso>=80)alertas+=`<div class="alerta atencao">⚠️ ${c.nome} já usou ${uso}% do planejado.</div>`;
-});
-document.getElementById("resumoCategorias").innerHTML=resumo;
-document.getElementById("alertas").innerHTML=alertas||'<div class="alerta ok">✅ Tudo dentro do planejado.</div>';
-
-let listaCat="";
-categorias.forEach((c,i)=>{
-listaCat+=`<tr><td><input value="${c.nome}" onchange="editarCategoria(${i},'nome',this.value)"></td><td><input type="number" value="${c.planejado}" onchange="editarCategoria(${i},'planejado',this.value)"></td><td><button style="background:#b91c1c" onclick="excluirCategoria(${i})">Excluir</button></td></tr>`;
-});
-document.getElementById("listaCategorias").innerHTML=listaCat;
-
-let termo=(document.getElementById("pesquisa")?.value||"").toLowerCase();
-let lista="";
-gf.filter(g=>g.descricao.toLowerCase().includes(termo)||g.categoria.toLowerCase().includes(termo)).sort((a,b)=>b.data.localeCompare(a.data)).forEach(g=>{
-let i=gastos.indexOf(g);
-lista+=`<tr><td>${new Date(g.data+"T00:00:00").toLocaleDateString("pt-BR")}</td><td>${g.descricao}</td><td>${g.categoria}</td><td>${moeda(g.valor)}</td><td><button style="background:#b91c1c" onclick="excluirGasto(${i})">X</button></td></tr>`;
-});
-document.getElementById("listaGastos").innerHTML=lista;
-}
-
-function simular(){
-let valor=Number(document.getElementById("valorSimular").value);
-let categoria=document.getElementById("categoriaSimular").value;
-if(valor<=0){alert("Digite um valor.");return;}
-let tc=totalCat();
-let cat=categorias.find(c=>c.nome===categoria);
-let saldoCat=(cat.planejado||0)-((tc[categoria]||0)+valor);
-document.getElementById("resultadoSimulacao").innerHTML=saldoCat>=0?`<div class="alerta ok">✅ Pode comprar. Restará ${moeda(saldoCat)} na categoria.</div>`:`<div class="alerta perigo">⚠️ Vai ultrapassar a categoria em ${moeda(Math.abs(saldoCat))}.</div>`;
-}
-
-function exportarCSV(){
-let csv="Data;Descrição;Categoria;Valor\n";
-gastos.forEach(g=>csv+=`${g.data};${g.descricao};${g.categoria};${String(g.valor).replace(".",",")}\n`);
-let blob=new Blob([csv],{type:"text/csv;charset=utf-8;"});
-let a=document.createElement("a");
-a.href=URL.createObjectURL(blob);a.download="fatura_facil.csv";a.click();
-}
-
-function apagarGastos(){
-if(confirm("Apagar todos os gastos?")){gastos=[];salvar();atualizarTudo();}
-}
-
+function iniciarDias(){let s=document.getElementById("diaFechamento");s.innerHTML="";for(let i=1;i<=31;i++){let o=document.createElement("option");o.value=i;o.textContent=String(i).padStart(2,"0");s.appendChild(o)}s.value=config.diaFechamento}
+function abrir(tela){document.querySelectorAll(".tela").forEach(x=>x.classList.remove("ativa"));document.getElementById(tela).classList.add("ativa");document.querySelectorAll(".nav button").forEach(x=>x.classList.remove("ativo"));document.getElementById("btn-"+tela).classList.add("ativo");atualizarTudo()}
+function salvar(){localStorage.setItem("ff_cat",JSON.stringify(categorias));localStorage.setItem("ff_gastos",JSON.stringify(gastos));localStorage.setItem("ff_config",JSON.stringify(config))}
+function salvarConfig(){config.diaFechamento=Number(document.getElementById("diaFechamento").value)||13;salvar();document.getElementById("msgConfig").innerHTML='<div class="alerta ok">✅ Configuração salva. Fatura de '+String(config.diaFechamento).padStart(2,"0")+' a '+String(config.diaFechamento).padStart(2,"0")+'.</div>';atualizarTudo()}
+function moeda(v){return Number(v||0).toLocaleString("pt-BR",{style:"currency",currency:"BRL"})}
+function dataSegura(ano,mes,dia){let ult=new Date(ano,mes+1,0).getDate();return new Date(ano,mes,Math.min(dia,ult))}
+function periodo(){let dia=Number(config.diaFechamento||13);let d=new Date(document.getElementById("dataFiltro").value+"T00:00:00");let ini,fim;if(d.getDate()>=dia){ini=dataSegura(d.getFullYear(),d.getMonth(),dia);fim=dataSegura(d.getFullYear(),d.getMonth()+1,dia)}else{ini=dataSegura(d.getFullYear(),d.getMonth()-1,dia);fim=dataSegura(d.getFullYear(),d.getMonth(),dia)}return{ini,fim}}
+function gastosFatura(){let p=periodo();return gastos.filter(g=>{let d=new Date(g.data+"T00:00:00");return d>=p.ini&&d<=p.fim})}
+function totalCat(){let o={};gastosFatura().forEach(g=>o[g.categoria]=(o[g.categoria]||0)+Number(g.valor));return o}
+function atualizarSelects(){["categoria","categoriaSimular"].forEach(id=>{let s=document.getElementById(id);let atual=s.value;s.innerHTML="";categorias.forEach(c=>{let o=document.createElement("option");o.value=c.nome;o.textContent=c.nome;s.appendChild(o)});if(categorias.some(c=>c.nome===atual))s.value=atual})}
+function adicionarGasto(){let data=document.getElementById("dataGasto").value,desc=document.getElementById("descricao").value.trim(),cat=document.getElementById("categoria").value,val=Number(document.getElementById("valor").value);if(!data||!desc||!cat||val<=0){alert("Preencha todos os campos.");return}gastos.push({data,descricao:desc,categoria:cat,valor:val});salvar();document.getElementById("descricao").value="";document.getElementById("valor").value="";atualizarTudo();alert("Gasto adicionado.")}
+function adicionarCategoria(){let nome=document.getElementById("novaCategoria").value.trim(),pl=Number(document.getElementById("novoPlanejado").value)||0;if(!nome){alert("Digite o nome da categoria.");return}if(categorias.some(c=>c.nome.toLowerCase()===nome.toLowerCase())){alert("Categoria já existe.");return}categorias.push({nome,planejado:pl});salvar();document.getElementById("novaCategoria").value="";document.getElementById("novoPlanejado").value="";atualizarTudo()}
+function editarCategoria(i,campo,valor){if(campo==="nome"){let antigo=categorias[i].nome;if(!valor.trim()){atualizarTudo();return}categorias[i].nome=valor.trim();gastos.forEach(g=>{if(g.categoria===antigo)g.categoria=valor.trim()})}else{categorias[i].planejado=Number(valor)||0}salvar();atualizarTudo()}
+function excluirCategoria(i){let nome=categorias[i].nome;if(gastos.some(g=>g.categoria===nome)){alert("Categoria com gastos não pode ser excluída.");return}if(confirm("Excluir categoria?")){categorias.splice(i,1);salvar();atualizarTudo()}}
+function excluirGasto(i){if(confirm("Excluir gasto?")){gastos.splice(i,1);salvar();atualizarTudo()}}
+function atualizarTudo(){atualizarSelects();let gf=gastosFatura(),total=gf.reduce((s,g)=>s+Number(g.valor),0),planejado=categorias.reduce((s,c)=>s+Number(c.planejado||0),0),saldo=planejado-total,p=periodo();let hoje=new Date(),dias=Math.max(0,Math.ceil((p.fim-hoje)/(1000*60*60*24))),porDia=dias>0&&saldo>0?saldo/dias:0;document.getElementById("subtitulo").innerText="Controle sua fatura de "+String(config.diaFechamento).padStart(2,"0")+" a "+String(config.diaFechamento).padStart(2,"0");document.getElementById("periodo").innerText="Fatura: "+p.ini.toLocaleDateString("pt-BR")+" até "+p.fim.toLocaleDateString("pt-BR");document.getElementById("totalFatura").innerText=moeda(total);document.getElementById("planejadoTotal").innerText=moeda(planejado);document.getElementById("saldoTotal").innerText=moeda(saldo);document.getElementById("diasFechamento").innerText=dias+" dias";document.getElementById("porDia").innerText=moeda(porDia);document.getElementById("fechamentoAtual").innerText=String(config.diaFechamento).padStart(2,"0")+" a "+String(config.diaFechamento).padStart(2,"0");
+let tc=totalCat(),resumo="",alertas="";categorias.forEach(c=>{let gasto=tc[c.nome]||0,falta=Number(c.planejado||0)-gasto,uso=c.planejado>0?Math.round(gasto/c.planejado*100):0,classe=uso>=100?"vermelho":uso>=80?"amarelo":"verde",classeFalta=falta<0?"vermelho":"verde";resumo+=`<tr><td>${c.nome}</td><td>${moeda(gasto)}</td><td>${moeda(c.planejado)}</td><td class="${classeFalta}">${falta>=0?moeda(falta):"Estourou "+moeda(Math.abs(falta))}</td><td class="${classe}">${c.planejado>0?uso+"%":"-"}</td></tr>`;if(c.planejado>0&&uso>=100)alertas+=`<div class="alerta perigo">🚨 ${c.nome} passou do planejado.</div>`;else if(c.planejado>0&&uso>=80)alertas+=`<div class="alerta atencao">⚠️ ${c.nome} já usou ${uso}% do planejado.</div>`});document.getElementById("resumoCategorias").innerHTML=resumo;document.getElementById("alertas").innerHTML=alertas||'<div class="alerta ok">✅ Tudo dentro do planejado.</div>';
+let listaCat="";categorias.forEach((c,i)=>{listaCat+=`<tr><td><input value="${c.nome}" onchange="editarCategoria(${i},'nome',this.value)"></td><td><input type="number" value="${c.planejado}" onchange="editarCategoria(${i},'planejado',this.value)"></td><td><button class="danger" onclick="excluirCategoria(${i})">Excluir</button></td></tr>`});document.getElementById("listaCategorias").innerHTML=listaCat;
+let termo=(document.getElementById("pesquisa")?.value||"").toLowerCase(),lista="";gf.filter(g=>g.descricao.toLowerCase().includes(termo)||g.categoria.toLowerCase().includes(termo)).sort((a,b)=>b.data.localeCompare(a.data)).forEach(g=>{let i=gastos.indexOf(g);lista+=`<tr><td>${new Date(g.data+"T00:00:00").toLocaleDateString("pt-BR")}</td><td>${g.descricao}</td><td>${g.categoria}</td><td>${moeda(g.valor)}</td><td><button class="danger" onclick="excluirGasto(${i})">X</button></td></tr>`});document.getElementById("listaGastos").innerHTML=lista}
+function simular(){let valor=Number(document.getElementById("valorSimular").value),cat=document.getElementById("categoriaSimular").value;if(valor<=0){alert("Digite um valor.");return}let tc=totalCat(),c=categorias.find(x=>x.nome===cat),saldoCat=(c.planejado||0)-((tc[cat]||0)+valor);document.getElementById("resultadoSimulacao").innerHTML=saldoCat>=0?`<div class="alerta ok">✅ Pode comprar. Restará ${moeda(saldoCat)} na categoria.</div>`:`<div class="alerta perigo">⚠️ Vai ultrapassar a categoria em ${moeda(Math.abs(saldoCat))}.</div>`}
+function exportarCSV(){let csv="Data;Descrição;Categoria;Valor\n";gastos.forEach(g=>csv+=`${g.data};${g.descricao};${g.categoria};${String(g.valor).replace(".",",")}\n`);let blob=new Blob([csv],{type:"text/csv;charset=utf-8;"});let a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="fatura_facil.csv";a.click()}
+function apagarGastos(){if(confirm("Apagar todos os gastos?")){gastos=[];salvar();atualizarTudo()}}
+function baixarBackup(){let dados={categorias,gastos,config,geradoEm:new Date().toISOString()};let blob=new Blob([JSON.stringify(dados,null,2)],{type:"application/json"});let a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="backup_fatura_facil.json";a.click()}
+function restaurarBackup(e){let file=e.target.files[0];if(!file)return;let r=new FileReader();r.onload=function(){try{let d=JSON.parse(r.result);if(d.categorias&&d.gastos&&d.config){categorias=d.categorias;gastos=d.gastos;config=d.config;salvar();iniciarDias();atualizarTudo();alert("Backup restaurado com sucesso.")}else alert("Arquivo de backup inválido.")}catch(err){alert("Erro ao restaurar backup.")}};r.readAsText(file)}
 document.getElementById("dataFiltro").addEventListener("change",atualizarTudo);
-atualizarTudo();
-
-if ("serviceWorker" in navigator) {
-  navigator.serviceWorker.register("service-worker.js");
-}
+iniciarDias();atualizarTudo();
+if("serviceWorker" in navigator){navigator.serviceWorker.register("service-worker.js")}
 </script>
 </body>
 </html>
