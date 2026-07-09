@@ -1,1 +1,270 @@
-<!DOCTYPE html><html lang="pt-BR"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Fatura Fácil</title><link rel="manifest" href="manifest.json"><meta name="theme-color" content="#12395b"><style>:root{--azul:#12395b;--azul2:#1f5f8b;--fundo:#f3f6fa;--verde:#166534;--amarelo:#d97706;--vermelho:#b91c1c}*{box-sizing:border-box}body{margin:0;font-family:Arial,sans-serif;background:var(--fundo);color:#1f2933;padding-bottom:92px}header{background:linear-gradient(135deg,var(--azul),var(--azul2));color:white;padding:22px;border-radius:0 0 24px 24px}h1{margin:0;font-size:26px}header p{margin:6px 0 0;font-size:14px;opacity:.9}main{padding:14px;max-width:980px;margin:auto}.card{background:white;border-radius:18px;padding:16px;margin-bottom:14px;box-shadow:0 4px 18px #0002;overflow-x:auto}input,select,button{width:100%;padding:12px;margin-top:6px;border-radius:12px;border:1px solid #d1d5db;font-size:15px}button{background:var(--azul);color:white;border:0;font-weight:bold}.danger{background:var(--vermelho)}.sec{background:#475569}.nav{position:fixed;bottom:0;left:0;right:0;background:white;display:grid;grid-template-columns:repeat(5,1fr);gap:4px;padding:8px;box-shadow:0 -3px 18px #0002;z-index:10}.nav button{font-size:11px;background:#e8eef5;color:#12395b;padding:9px 3px}.nav button.ativo{background:#12395b;color:white}.tela{display:none}.tela.ativa{display:block}.valor{font-size:34px;font-weight:800;color:#12395b;margin:6px 0}.kpi{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.kpi div{background:#f1f5f9;border-radius:14px;padding:12px}.kpi span{display:block;font-size:12px;color:#64748b}.kpi b{display:block;margin-top:5px;color:#12395b}table{width:100%;border-collapse:collapse;margin-top:10px;min-width:760px}td,th{border-bottom:1px solid #e5e7eb;padding:8px;font-size:12px;text-align:left;white-space:nowrap}.alerta{padding:10px;border-radius:12px;margin-top:10px;font-weight:bold}.ok{background:#dcfce7;color:#166534}.atencao{background:#fef3c7;color:#92400e}.perigo{background:#fee2e2;color:#991b1b}.verde{color:var(--verde);font-weight:bold}.amarelo{color:var(--amarelo);font-weight:bold}.vermelho{color:var(--vermelho);font-weight:bold}.info{font-size:13px;color:#6b7280}.form2{display:grid;grid-template-columns:1fr 1fr;gap:10px}.badge{display:inline-block;background:#e0f2fe;color:#075985;border-radius:999px;padding:4px 10px;font-size:12px;font-weight:bold}@media(max-width:700px){.kpi,.form2{grid-template-columns:1fr}table{min-width:780px}}</style></head><body><header><h1>💳 Fatura Fácil</h1><p id="subtitulo">Controle sua fatura</p></header><main><section id="inicio" class="tela ativa"><div class="card"><span class="badge">V1.6 Parcelado</span><h2>Dashboard</h2><label>Data dentro da fatura</label><input type="date" id="dataFiltro"><p id="periodo" class="info"></p><p>Fatura atual</p><div class="valor" id="totalFatura">R$ 0,00</div><div class="kpi"><div><span>Planejado</span><b id="planejadoTotal">R$ 0,00</b></div><div><span>Restante</span><b id="saldoTotal">R$ 0,00</b></div><div><span>Dias até fechamento</span><b id="diasFechamento">0 dias</b></div><div><span>Pode gastar por dia</span><b id="porDia">R$ 0,00</b></div></div><div id="alertas"></div></div><div class="card"><h2>Resumo por categoria</h2><p class="info">Arraste a tabela para o lado se necessário.</p><table><thead><tr><th>Categoria</th><th>Gasto</th><th>Limite</th><th>Falta gastar</th><th>Uso</th></tr></thead><tbody id="resumoCategorias"></tbody></table></div></section><section id="gasto" class="tela"><div class="card"><h2>Novo gasto</h2><div class="form2"><div><label>Data da compra</label><input type="date" id="dataGasto"></div><div><label>Valor total R$</label><input type="number" id="valor" step="0.01" placeholder="0,00"></div></div><label>Descrição</label><input id="descricao" placeholder="Ex: Mercado Atacadão"><label>Categoria</label><select id="categoria"></select><label>Quantidade de parcelas</label><select id="parcelas"></select><p class="info">Exemplo: R$ 1.500 em 3x gera 3 parcelas de R$ 500 nas próximas faturas.</p><button onclick="adicionarGasto()">Adicionar gasto</button></div><div class="card"><h2>Posso comprar?</h2><div class="form2"><div><label>Valor da compra</label><input type="number" id="valorSimular" step="0.01"></div><div><label>Categoria</label><select id="categoriaSimular"></select></div></div><button class="sec" onclick="simular()">Simular</button><div id="resultadoSimulacao"></div></div></section><section id="categorias" class="tela"><div class="card"><h2>Adicionar categoria</h2><div class="form2"><div><label>Nome</label><input id="novaCategoria" placeholder="Ex: Farmácia"></div><div><label>Planejado R$</label><input type="number" id="novoPlanejado" step="0.01"></div></div><button onclick="adicionarCategoria()">Adicionar categoria</button></div><div class="card"><h2>Categorias</h2><table><thead><tr><th>Categoria</th><th>Planejado</th><th>Ação</th></tr></thead><tbody id="listaCategorias"></tbody></table></div></section><section id="historico" class="tela"><div class="card"><h2>Histórico da fatura</h2><label>Pesquisar</label><input id="pesquisa" oninput="atualizarTudo()" placeholder="Buscar gasto"><table><thead><tr><th>Data</th><th>Descrição</th><th>Categoria</th><th>Parcela</th><th>Valor</th><th></th></tr></thead><tbody id="listaGastos"></tbody></table></div><div class="card"><h2>Parcelados ativos</h2><table><thead><tr><th>Compra</th><th>Total</th><th>Parcelas</th><th>Restam</th><th>Saldo futuro</th></tr></thead><tbody id="listaParcelados"></tbody></table></div><div class="card"><button onclick="exportarCSV()">Exportar CSV</button><br><br><button class="danger" onclick="apagarGastos()">Apagar gastos</button></div></section><section id="config" class="tela"><div class="card"><h2>Configurações</h2><p class="info">Escolha o dia de fechamento. Exemplo: 12 = fatura de 12 a 12; 05 = fatura de 05 a 05.</p><label>Dia de fechamento da fatura</label><select id="diaFechamento"></select><button onclick="salvarConfig()">Salvar configuração</button><div id="msgConfig"></div></div><div class="card"><h2>Backup dos dados</h2><button onclick="baixarBackup()">Baixar backup</button><label>Restaurar backup</label><input type="file" id="arquivoBackup" accept=".json" onchange="restaurarBackup(event)"></div><div class="card"><h2>Configuração atual</h2><p>Fechamento configurado: <b id="fechamentoAtual"></b></p></div></section></main><div class="nav"><button id="btn-inicio" class="ativo" onclick="abrir('inicio')">🏠<br>Início</button><button id="btn-gasto" onclick="abrir('gasto')">➕<br>Gasto</button><button id="btn-categorias" onclick="abrir('categorias')">📂<br>Cat.</button><button id="btn-historico" onclick="abrir('historico')">📋<br>Hist.</button><button id="btn-config" onclick="abrir('config')">⚙️<br>Config.</button></div><script>let categorias=JSON.parse(localStorage.getItem('ff_cat'))||[{nome:'Mercado',planejado:1200},{nome:'Alimentação',planejado:600},{nome:'Combustível',planejado:600},{nome:'Farmácia',planejado:250},{nome:'Casa',planejado:400},{nome:'Lazer',planejado:300},{nome:'Outros',planejado:300}];let gastos=JSON.parse(localStorage.getItem('ff_gastos'))||[];let config=JSON.parse(localStorage.getItem('ff_config'))||{diaFechamento:13};document.getElementById('dataFiltro').valueAsDate=new Date();document.getElementById('dataGasto').valueAsDate=new Date();function iniciarDias(){let s=document.getElementById('diaFechamento');s.innerHTML='';for(let i=1;i<=31;i++){let o=document.createElement('option');o.value=i;o.textContent=String(i).padStart(2,'0');s.appendChild(o)}s.value=config.diaFechamento}function iniciarParcelas(){let s=document.getElementById('parcelas');s.innerHTML='';for(let i=1;i<=36;i++){let o=document.createElement('option');o.value=i;o.textContent=i+'x';s.appendChild(o)}}function abrir(t){document.querySelectorAll('.tela').forEach(x=>x.classList.remove('ativa'));document.getElementById(t).classList.add('ativa');document.querySelectorAll('.nav button').forEach(x=>x.classList.remove('ativo'));document.getElementById('btn-'+t).classList.add('ativo');atualizarTudo()}function salvar(){localStorage.setItem('ff_cat',JSON.stringify(categorias));localStorage.setItem('ff_gastos',JSON.stringify(gastos));localStorage.setItem('ff_config',JSON.stringify(config))}function salvarConfig(){config.diaFechamento=Number(document.getElementById('diaFechamento').value)||13;salvar();document.getElementById('msgConfig').innerHTML='<div class="alerta ok">✅ Configuração salva.</div>';atualizarTudo()}function moeda(v){return Number(v||0).toLocaleString('pt-BR',{style:'currency',currency:'BRL'})}function dataSegura(a,m,d){let u=new Date(a,m+1,0).getDate();return new Date(a,m,Math.min(d,u))}function periodo(){let dia=Number(config.diaFechamento||13),d=new Date(document.getElementById('dataFiltro').value+'T00:00:00'),ini,fim;if(d.getDate()>=dia){ini=dataSegura(d.getFullYear(),d.getMonth(),dia);fim=dataSegura(d.getFullYear(),d.getMonth()+1,dia)}else{ini=dataSegura(d.getFullYear(),d.getMonth()-1,dia);fim=dataSegura(d.getFullYear(),d.getMonth(),dia)}return{ini,fim}}function adicionarMeses(dataISO,meses){let d=new Date(dataISO+'T00:00:00');return new Date(d.getFullYear(),d.getMonth()+meses,d.getDate()).toISOString().slice(0,10)}function gastosFatura(){let p=periodo();return gastos.filter(g=>{let d=new Date(g.data+'T00:00:00');return d>=p.ini&&d<=p.fim})}function totalCat(){let o={};gastosFatura().forEach(g=>o[g.categoria]=(o[g.categoria]||0)+Number(g.valor));return o}function atualizarSelects(){['categoria','categoriaSimular'].forEach(id=>{let s=document.getElementById(id),a=s.value;s.innerHTML='';categorias.forEach(c=>{let o=document.createElement('option');o.value=c.nome;o.textContent=c.nome;s.appendChild(o)});if(categorias.some(c=>c.nome===a))s.value=a})}function adicionarGasto(){let data=document.getElementById('dataGasto').value,desc=document.getElementById('descricao').value.trim(),cat=document.getElementById('categoria').value,total=Number(document.getElementById('valor').value),qtd=Number(document.getElementById('parcelas').value)||1;if(!data||!desc||!cat||total<=0){alert('Preencha todos os campos.');return}let id='p'+Date.now(),vp=Math.round((total/qtd)*100)/100;for(let i=1;i<=qtd;i++){let val=i===qtd?Math.round((total-vp*(qtd-1))*100)/100:vp;gastos.push({data:adicionarMeses(data,i-1),descricao:desc,categoria:cat,valor:val,parcelado:qtd>1,parcelaAtual:i,totalParcelas:qtd,valorTotal:total,grupoId:id})}salvar();document.getElementById('descricao').value='';document.getElementById('valor').value='';document.getElementById('parcelas').value='1';atualizarTudo();alert(qtd>1?'Compra parcelada gerada em '+qtd+'x.':'Gasto adicionado.')}function adicionarCategoria(){let nome=document.getElementById('novaCategoria').value.trim(),pl=Number(document.getElementById('novoPlanejado').value)||0;if(!nome){alert('Digite o nome da categoria.');return}if(categorias.some(c=>c.nome.toLowerCase()===nome.toLowerCase())){alert('Categoria já existe.');return}categorias.push({nome,planejado:pl});salvar();document.getElementById('novaCategoria').value='';document.getElementById('novoPlanejado').value='';atualizarTudo()}function editarCategoria(i,campo,valor){if(campo==='nome'){let antigo=categorias[i].nome;if(!valor.trim()){atualizarTudo();return}categorias[i].nome=valor.trim();gastos.forEach(g=>{if(g.categoria===antigo)g.categoria=valor.trim()})}else categorias[i].planejado=Number(valor)||0;salvar();atualizarTudo()}function excluirCategoria(i){let nome=categorias[i].nome;if(gastos.some(g=>g.categoria===nome)){alert('Categoria com gastos não pode ser excluída.');return}if(confirm('Excluir categoria?')){categorias.splice(i,1);salvar();atualizarTudo()}}function excluirGasto(i){if(confirm('Excluir este lançamento?')){gastos.splice(i,1);salvar();atualizarTudo()}}function atualizarTudo(){atualizarSelects();let gf=gastosFatura(),total=gf.reduce((s,g)=>s+Number(g.valor),0),planejado=categorias.reduce((s,c)=>s+Number(c.planejado||0),0),saldo=planejado-total,p=periodo(),hoje=new Date(),dias=Math.max(0,Math.ceil((p.fim-hoje)/(1000*60*60*24))),porDia=dias>0&&saldo>0?saldo/dias:0;document.getElementById('subtitulo').innerText='Controle sua fatura de '+String(config.diaFechamento).padStart(2,'0')+' a '+String(config.diaFechamento).padStart(2,'0');document.getElementById('periodo').innerText='Fatura: '+p.ini.toLocaleDateString('pt-BR')+' até '+p.fim.toLocaleDateString('pt-BR');document.getElementById('totalFatura').innerText=moeda(total);document.getElementById('planejadoTotal').innerText=moeda(planejado);document.getElementById('saldoTotal').innerText=moeda(saldo);document.getElementById('diasFechamento').innerText=dias+' dias';document.getElementById('porDia').innerText=moeda(porDia);document.getElementById('fechamentoAtual').innerText=String(config.diaFechamento).padStart(2,'0')+' a '+String(config.diaFechamento).padStart(2,'0');let tc=totalCat(),resumo='',alertas='';categorias.forEach(c=>{let gasto=tc[c.nome]||0,falta=Number(c.planejado||0)-gasto,uso=c.planejado>0?Math.round(gasto/c.planejado*100):0,classe=uso>=100?'vermelho':uso>=80?'amarelo':'verde',classeFalta=falta<0?'vermelho':'verde';resumo+=`<tr><td>${c.nome}</td><td>${moeda(gasto)}</td><td>${moeda(c.planejado)}</td><td class="${classeFalta}">${falta>=0?moeda(falta):'Estourou '+moeda(Math.abs(falta))}</td><td class="${classe}">${c.planejado>0?uso+'%':'-'}</td></tr>`;if(c.planejado>0&&uso>=100)alertas+=`<div class="alerta perigo">🚨 ${c.nome} passou do planejado.</div>`;else if(c.planejado>0&&uso>=80)alertas+=`<div class="alerta atencao">⚠️ ${c.nome} já usou ${uso}% do planejado.</div>`});document.getElementById('resumoCategorias').innerHTML=resumo;document.getElementById('alertas').innerHTML=alertas||'<div class="alerta ok">✅ Tudo dentro do planejado.</div>';let lc='';categorias.forEach((c,i)=>{lc+=`<tr><td><input value="${c.nome}" onchange="editarCategoria(${i},'nome',this.value)"></td><td><input type="number" value="${c.planejado}" onchange="editarCategoria(${i},'planejado',this.value)"></td><td><button class="danger" onclick="excluirCategoria(${i})">Excluir</button></td></tr>`});document.getElementById('listaCategorias').innerHTML=lc;let termo=(document.getElementById('pesquisa')?.value||'').toLowerCase(),lista='';gf.filter(g=>g.descricao.toLowerCase().includes(termo)||g.categoria.toLowerCase().includes(termo)).sort((a,b)=>b.data.localeCompare(a.data)).forEach(g=>{let i=gastos.indexOf(g),par=g.totalParcelas>1?g.parcelaAtual+'/'+g.totalParcelas:'1x';lista+=`<tr><td>${new Date(g.data+'T00:00:00').toLocaleDateString('pt-BR')}</td><td>${g.descricao}</td><td>${g.categoria}</td><td>${par}</td><td>${moeda(g.valor)}</td><td><button class="danger" onclick="excluirGasto(${i})">X</button></td></tr>`});document.getElementById('listaGastos').innerHTML=lista;atualizarParcelados()}function atualizarParcelados(){let grupos={};gastos.filter(g=>g.totalParcelas>1).forEach(g=>{if(!grupos[g.grupoId])grupos[g.grupoId]=[];grupos[g.grupoId].push(g)});let html='',hoje=new Date();Object.values(grupos).forEach(arr=>{arr.sort((a,b)=>a.parcelaAtual-b.parcelaAtual);let f=arr[0],rest=arr.filter(g=>new Date(g.data+'T00:00:00')>=hoje),saldo=rest.reduce((s,g)=>s+Number(g.valor),0);html+=`<tr><td>${f.descricao}</td><td>${moeda(f.valorTotal)}</td><td>${f.totalParcelas}x</td><td>${rest.length}</td><td>${moeda(saldo)}</td></tr>`});document.getElementById('listaParcelados').innerHTML=html||'<tr><td colspan="5">Nenhuma compra parcelada ativa.</td></tr>'}function simular(){let valor=Number(document.getElementById('valorSimular').value),cat=document.getElementById('categoriaSimular').value;if(valor<=0){alert('Digite um valor.');return}let tc=totalCat(),c=categorias.find(x=>x.nome===cat),saldoCat=(c.planejado||0)-((tc[cat]||0)+valor);document.getElementById('resultadoSimulacao').innerHTML=saldoCat>=0?`<div class="alerta ok">✅ Pode comprar. Restará ${moeda(saldoCat)} na categoria.</div>`:`<div class="alerta perigo">⚠️ Vai ultrapassar a categoria em ${moeda(Math.abs(saldoCat))}.</div>`}function exportarCSV(){let csv='Data;Descrição;Categoria;Parcela;Valor\n';gastos.forEach(g=>csv+=`${g.data};${g.descricao};${g.categoria};${g.totalParcelas>1?g.parcelaAtual+'/'+g.totalParcelas:'1x'};${String(g.valor).replace('.',',')}\n`);let blob=new Blob([csv],{type:'text/csv;charset=utf-8;'});let a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='fatura_facil.csv';a.click()}function apagarGastos(){if(confirm('Apagar todos os gastos?')){gastos=[];salvar();atualizarTudo()}}function baixarBackup(){let dados={categorias,gastos,config,geradoEm:new Date().toISOString()};let blob=new Blob([JSON.stringify(dados,null,2)],{type:'application/json'});let a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='backup_fatura_facil.json';a.click()}function restaurarBackup(e){let file=e.target.files[0];if(!file)return;let r=new FileReader();r.onload=function(){try{let d=JSON.parse(r.result);if(d.categorias&&d.gastos&&d.config){categorias=d.categorias;gastos=d.gastos;config=d.config;salvar();iniciarDias();atualizarTudo();alert('Backup restaurado com sucesso.')}else alert('Arquivo de backup inválido.')}catch(err){alert('Erro ao restaurar backup.')}};r.readAsText(file)}document.getElementById('dataFiltro').addEventListener('change',atualizarTudo);iniciarDias();iniciarParcelas();atualizarTudo();if('serviceWorker'in navigator){navigator.serviceWorker.register('service-worker.js')}</script></body></html>
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fatura Fácil V2.1</title>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#0f2f4a">
+<style>
+:root{
+--azul:#0f2f4a;--azul2:#176b9c;--fundo:#eef4f8;--card:#ffffff;--verde:#15803d;--amarelo:#d97706;--vermelho:#b91c1c;--cinza:#64748b;
+}
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,sans-serif;background:var(--fundo);color:#1f2933;padding-bottom:92px}
+header{background:linear-gradient(135deg,var(--azul),var(--azul2));color:white;padding:24px 18px 30px;border-radius:0 0 28px 28px}
+h1{margin:0;font-size:27px}
+header p{margin:6px 0 0;font-size:14px;opacity:.92}
+main{padding:14px;max-width:980px;margin:auto;margin-top:-18px}
+.card{background:white;border-radius:20px;padding:16px;margin-bottom:14px;box-shadow:0 8px 24px #00000018;overflow-x:auto}
+.valor{font-size:36px;font-weight:900;color:#0f2f4a;margin:6px 0 12px}
+.badge{display:inline-block;background:#dbeafe;color:#075985;border-radius:999px;padding:5px 11px;font-size:12px;font-weight:bold;margin-bottom:8px}
+input,select,button{width:100%;padding:12px;margin-top:6px;border-radius:13px;border:1px solid #d1d5db;font-size:15px}
+button{background:var(--azul);color:white;border:0;font-weight:bold}
+button.sec{background:#475569}button.danger{background:var(--vermelho)}
+.nav{position:fixed;bottom:0;left:0;right:0;background:white;display:grid;grid-template-columns:repeat(5,1fr);gap:4px;padding:8px;box-shadow:0 -3px 18px #0002;z-index:10}
+.nav button{font-size:11px;background:#e8eef5;color:#12395b;padding:9px 3px}.nav button.ativo{background:#12395b;color:white}
+.tela{display:none}.tela.ativa{display:block}
+.kpi{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.kpi div{background:#f1f5f9;border-radius:15px;padding:12px}.kpi span{display:block;font-size:12px;color:#64748b}.kpi b{display:block;margin-top:5px;color:#0f2f4a}
+table{width:100%;border-collapse:collapse;margin-top:10px;min-width:760px}td,th{border-bottom:1px solid #e5e7eb;padding:8px;font-size:12px;text-align:left;white-space:nowrap}
+.alerta{padding:10px;border-radius:12px;margin-top:10px;font-weight:bold}.ok{background:#dcfce7;color:#166534}.atencao{background:#fef3c7;color:#92400e}.perigo{background:#fee2e2;color:#991b1b}
+.verde{color:var(--verde);font-weight:bold}.amarelo{color:var(--amarelo);font-weight:bold}.vermelho{color:var(--vermelho);font-weight:bold}.info{font-size:13px;color:#64748b}
+.form2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.barra-bg{height:12px;background:#e5e7eb;border-radius:999px;overflow:hidden;margin-top:6px}
+.barra{height:100%;background:#22c55e;width:0%;border-radius:999px}
+.grafico-linha{margin:10px 0}
+.grafico-linha .topo{display:flex;justify-content:space-between;font-size:13px;margin-bottom:4px}
+.saude{font-size:42px;font-weight:900;color:#0f2f4a}
+
+.fatura-card{display:flex;justify-content:space-between;align-items:center;gap:12px;background:#f8fafc;border:1px solid #e5e7eb;border-radius:14px;padding:12px;margin-top:10px}
+.fatura-card span{display:block;font-size:12px;color:#64748b}
+.fatura-card b{display:block;margin-top:4px;font-size:14px;color:#0f2f4a}
+.fatura-card .valor-previsto{font-size:18px;font-weight:900;color:#12395b;text-align:right;white-space:nowrap}
+
+@media(max-width:700px){.kpi,.form2{grid-template-columns:1fr}table{min-width:780px}}
+</style>
+</head>
+<body>
+<header>
+<h1>💳 Fatura Fácil</h1>
+<p id="subtitulo">Controle sua fatura antes que ela controle você</p>
+</header>
+
+<main>
+<section id="inicio" class="tela ativa">
+<div class="card">
+<span class="badge">V2.1 Teste</span>
+<h2>Dashboard</h2>
+<label>Data dentro da fatura</label>
+<input type="date" id="dataFiltro">
+<p id="periodo" class="info"></p>
+<p>Fatura atual</p>
+<div class="valor" id="totalFatura">R$ 0,00</div>
+<div class="barra-bg"><div class="barra" id="barraTotal"></div></div>
+<p id="usoTotalTexto" class="info">0% do orçamento total</p>
+<div class="kpi">
+<div><span>Planejado</span><b id="planejadoTotal">R$ 0,00</b></div>
+<div><span>Restante</span><b id="saldoTotal">R$ 0,00</b></div>
+<div><span>Dias até fechamento</span><b id="diasFechamento">0 dias</b></div>
+<div><span>Pode gastar por dia</span><b id="porDia">R$ 0,00</b></div>
+</div>
+<div id="alertas"></div>
+</div>
+
+<div class="card">
+<h2>Saúde financeira</h2>
+<div class="saude" id="pontuacaoSaude">100</div>
+<p id="textoSaude" class="info">Excelente controle.</p>
+</div>
+
+<div class="card">
+<h2>Resumo por categoria</h2>
+<p class="info">Arraste a tabela para o lado se necessário.</p>
+<table>
+<thead><tr><th>Categoria</th><th>Gasto</th><th>Planejado</th><th>Falta gastar</th><th>Uso</th></tr></thead>
+<tbody id="resumoCategorias"></tbody>
+</table>
+</div>
+</section>
+
+<section id="gasto" class="tela">
+<div class="card">
+<h2>Novo gasto</h2>
+<div class="form2">
+<div><label>Data da compra</label><input type="date" id="dataGasto"></div>
+<div><label>Valor total R$</label><input type="number" id="valor" step="0.01" placeholder="0,00"></div>
+</div>
+<label>Descrição</label><input id="descricao" placeholder="Ex: Mercado Atacadão">
+<label>Categoria</label><select id="categoria"></select>
+<label>Quantidade de parcelas</label><select id="parcelas"></select>
+<p class="info">Se for 1x, entra somente na fatura atual. Se for parcelado, gera automaticamente nas próximas faturas.</p>
+<button onclick="adicionarGasto()">Adicionar gasto</button>
+</div>
+
+<div class="card">
+<h2>Posso comprar?</h2>
+<div class="form2">
+<div><label>Valor da compra</label><input type="number" id="valorSimular" step="0.01"></div>
+<div><label>Categoria</label><select id="categoriaSimular"></select></div>
+</div>
+<label>Parcelas</label><select id="parcelasSimular"></select>
+<button class="sec" onclick="simular()">Simular</button>
+<div id="resultadoSimulacao"></div>
+</div>
+</section>
+
+<section id="relatorios" class="tela">
+<div class="card">
+<h2>Gastos por categoria</h2>
+<div id="graficoCategorias"></div>
+</div>
+<div class="card">
+<h2>Próximas faturas</h2>
+<p class="info">Período e valor previsto aparecem juntos para facilitar a visualização no celular.</p>
+<div id="proximasFaturas"></div>
+</div>
+</section>
+
+<section id="historico" class="tela">
+<div class="card">
+<h2>Histórico da fatura</h2>
+<label>Pesquisar</label><input id="pesquisa" oninput="atualizarTudo()" placeholder="Buscar gasto">
+<table>
+<thead><tr><th>Data</th><th>Descrição</th><th>Categoria</th><th>Parcela</th><th>Valor</th><th></th></tr></thead>
+<tbody id="listaGastos"></tbody>
+</table>
+</div>
+<div class="card">
+<h2>Parcelados ativos</h2>
+<table><thead><tr><th>Compra</th><th>Total</th><th>Parcelas</th><th>Restam</th><th>Saldo futuro</th></tr></thead><tbody id="listaParcelados"></tbody></table>
+</div>
+<div class="card">
+<button onclick="exportarCSV()">Exportar CSV</button>
+<br><br><button class="danger" onclick="apagarGastos()">Apagar gastos</button>
+</div>
+</section>
+
+<section id="config" class="tela">
+<div class="card">
+<h2>Categorias</h2>
+<div class="form2">
+<div><label>Nome</label><input id="novaCategoria" placeholder="Ex: Farmácia"></div>
+<div><label>Planejado R$</label><input type="number" id="novoPlanejado" step="0.01"></div>
+</div>
+<button onclick="adicionarCategoria()">Adicionar categoria</button>
+<table><thead><tr><th>Categoria</th><th>Planejado</th><th>Ação</th></tr></thead><tbody id="listaCategorias"></tbody></table>
+</div>
+
+<div class="card">
+<h2>Configurações da fatura</h2>
+<label>Dia de fechamento</label><select id="diaFechamento"></select>
+<button onclick="salvarConfig()">Salvar configuração</button>
+<div id="msgConfig"></div>
+</div>
+
+<div class="card">
+<h2>Backup</h2>
+<button onclick="baixarBackup()">Baixar backup</button>
+<label>Restaurar backup</label><input type="file" id="arquivoBackup" accept=".json" onchange="restaurarBackup(event)">
+</div>
+</section>
+</main>
+
+<div class="nav">
+<button id="btn-inicio" class="ativo" onclick="abrir('inicio')">🏠<br>Início</button>
+<button id="btn-gasto" onclick="abrir('gasto')">➕<br>Gasto</button>
+<button id="btn-relatorios" onclick="abrir('relatorios')">📊<br>Relat.</button>
+<button id="btn-historico" onclick="abrir('historico')">📋<br>Hist.</button>
+<button id="btn-config" onclick="abrir('config')">⚙️<br>Config.</button>
+</div>
+
+<script>
+let categorias=JSON.parse(localStorage.getItem("ff_cat"))||[{nome:"Mercado",planejado:1200},{nome:"Alimentação",planejado:600},{nome:"Combustível",planejado:600},{nome:"Farmácia",planejado:250},{nome:"Casa",planejado:400},{nome:"Lazer",planejado:300},{nome:"Outros",planejado:300}];
+let gastos=JSON.parse(localStorage.getItem("ff_gastos"))||[];
+let config=JSON.parse(localStorage.getItem("ff_config"))||{diaFechamento:13};
+
+document.getElementById("dataFiltro").valueAsDate=new Date();
+document.getElementById("dataGasto").valueAsDate=new Date();
+
+function iniciarDias(){let s=document.getElementById("diaFechamento");s.innerHTML="";for(let i=1;i<=31;i++){let o=document.createElement("option");o.value=i;o.textContent=String(i).padStart(2,"0");s.appendChild(o)}s.value=config.diaFechamento}
+function iniciarParcelas(){["parcelas","parcelasSimular"].forEach(id=>{let s=document.getElementById(id);s.innerHTML="";for(let i=1;i<=36;i++){let o=document.createElement("option");o.value=i;o.textContent=i+"x";s.appendChild(o)}})}
+function abrir(tela){document.querySelectorAll(".tela").forEach(x=>x.classList.remove("ativa"));document.getElementById(tela).classList.add("ativa");document.querySelectorAll(".nav button").forEach(x=>x.classList.remove("ativo"));document.getElementById("btn-"+tela).classList.add("ativo");atualizarTudo()}
+function salvar(){localStorage.setItem("ff_cat",JSON.stringify(categorias));localStorage.setItem("ff_gastos",JSON.stringify(gastos));localStorage.setItem("ff_config",JSON.stringify(config))}
+function salvarConfig(){config.diaFechamento=Number(document.getElementById("diaFechamento").value)||13;salvar();document.getElementById("msgConfig").innerHTML='<div class="alerta ok">✅ Configuração salva.</div>';atualizarTudo()}
+function moeda(v){return Number(v||0).toLocaleString("pt-BR",{style:"currency",currency:"BRL"})}
+function dataSegura(ano,mes,dia){let ult=new Date(ano,mes+1,0).getDate();return new Date(ano,mes,Math.min(dia,ult))}
+function periodo(dataBase){let dia=Number(config.diaFechamento||13);let d=new Date((dataBase||document.getElementById("dataFiltro").value)+"T00:00:00");let ini,fim;if(d.getDate()>=dia){ini=dataSegura(d.getFullYear(),d.getMonth(),dia);fim=dataSegura(d.getFullYear(),d.getMonth()+1,dia)}else{ini=dataSegura(d.getFullYear(),d.getMonth()-1,dia);fim=dataSegura(d.getFullYear(),d.getMonth(),dia)}return{ini,fim}}
+function adicionarMeses(dataISO, meses){let d=new Date(dataISO+"T00:00:00");return new Date(d.getFullYear(),d.getMonth()+meses,d.getDate()).toISOString().slice(0,10)}
+function gastosFatura(dataBase){let p=periodo(dataBase);return gastos.filter(g=>{let d=new Date(g.data+"T00:00:00");return d>=p.ini&&d<=p.fim})}
+function totalCat(){let o={};gastosFatura().forEach(g=>o[g.categoria]=(o[g.categoria]||0)+Number(g.valor));return o}
+function atualizarSelects(){["categoria","categoriaSimular"].forEach(id=>{let s=document.getElementById(id);let atual=s.value;s.innerHTML="";categorias.forEach(c=>{let o=document.createElement("option");o.value=c.nome;o.textContent=c.nome;s.appendChild(o)});if(categorias.some(c=>c.nome===atual))s.value=atual})}
+
+function adicionarGasto(){
+let data=document.getElementById("dataGasto").value,desc=document.getElementById("descricao").value.trim(),cat=document.getElementById("categoria").value,total=Number(document.getElementById("valor").value),qtd=Number(document.getElementById("parcelas").value)||1;
+if(!data||!desc||!cat||total<=0){alert("Preencha todos os campos.");return}
+let id="p"+Date.now();let valorParcela=Math.round((total/qtd)*100)/100;
+for(let i=1;i<=qtd;i++){let valor=i===qtd?Math.round((total-valorParcela*(qtd-1))*100)/100:valorParcela;gastos.push({data:adicionarMeses(data,i-1),descricao:desc,categoria:cat,valor:valor,parcelado:qtd>1,parcelaAtual:i,totalParcelas:qtd,valorTotal:total,grupoId:id})}
+salvar();document.getElementById("descricao").value="";document.getElementById("valor").value="";document.getElementById("parcelas").value="1";atualizarTudo();alert(qtd>1?"Compra parcelada gerada em "+qtd+"x.":"Gasto adicionado.")
+}
+function adicionarCategoria(){let nome=document.getElementById("novaCategoria").value.trim(),pl=Number(document.getElementById("novoPlanejado").value)||0;if(!nome){alert("Digite o nome da categoria.");return}if(categorias.some(c=>c.nome.toLowerCase()===nome.toLowerCase())){alert("Categoria já existe.");return}categorias.push({nome,planejado:pl});salvar();document.getElementById("novaCategoria").value="";document.getElementById("novoPlanejado").value="";atualizarTudo()}
+function editarCategoria(i,campo,valor){if(campo==="nome"){let antigo=categorias[i].nome;if(!valor.trim()){atualizarTudo();return}categorias[i].nome=valor.trim();gastos.forEach(g=>{if(g.categoria===antigo)g.categoria=valor.trim()})}else{categorias[i].planejado=Number(valor)||0}salvar();atualizarTudo()}
+function excluirCategoria(i){let nome=categorias[i].nome;if(gastos.some(g=>g.categoria===nome)){alert("Categoria com gastos não pode ser excluída.");return}if(confirm("Excluir categoria?")){categorias.splice(i,1);salvar();atualizarTudo()}}
+function excluirGasto(i){if(confirm("Excluir este lançamento?")){gastos.splice(i,1);salvar();atualizarTudo()}}
+
+function atualizarTudo(){
+atualizarSelects();
+let gf=gastosFatura(),total=gf.reduce((s,g)=>s+Number(g.valor),0),planejado=categorias.reduce((s,c)=>s+Number(c.planejado||0),0),saldo=planejado-total,p=periodo();
+let hoje=new Date(),dias=Math.max(0,Math.ceil((p.fim-hoje)/(1000*60*60*24))),porDia=dias>0&&saldo>0?saldo/dias:0;
+let perc=planejado>0?Math.round(total/planejado*100):0;
+document.getElementById("subtitulo").innerText="Controle sua fatura de "+String(config.diaFechamento).padStart(2,"0")+" a "+String(config.diaFechamento).padStart(2,"0");
+document.getElementById("periodo").innerText="Fatura: "+p.ini.toLocaleDateString("pt-BR")+" até "+p.fim.toLocaleDateString("pt-BR");
+document.getElementById("totalFatura").innerText=moeda(total);document.getElementById("planejadoTotal").innerText=moeda(planejado);document.getElementById("saldoTotal").innerText=moeda(saldo);document.getElementById("diasFechamento").innerText=dias+" dias";document.getElementById("porDia").innerText=moeda(porDia);
+document.getElementById("barraTotal").style.width=Math.min(100,perc)+"%";document.getElementById("barraTotal").style.background=perc>=100?"#ef4444":perc>=80?"#f59e0b":"#22c55e";document.getElementById("usoTotalTexto").innerText=perc+"% do orçamento total";
+
+let tc=totalCat(),resumo="",alertas="",estouradas=0;
+categorias.forEach(c=>{let gasto=tc[c.nome]||0,falta=Number(c.planejado||0)-gasto,uso=c.planejado>0?Math.round(gasto/c.planejado*100):0,classe=uso>=100?"vermelho":uso>=80?"amarelo":"verde",classeFalta=falta<0?"vermelho":"verde";if(uso>=100)estouradas++;resumo+=`<tr><td>${c.nome}</td><td>${moeda(gasto)}</td><td>${moeda(c.planejado)}</td><td class="${classeFalta}">${falta>=0?moeda(falta):"Estourou "+moeda(Math.abs(falta))}</td><td class="${classe}">${c.planejado>0?uso+"%":"-"}</td></tr>`;if(c.planejado>0&&uso>=100)alertas+=`<div class="alerta perigo">🚨 ${c.nome} passou do planejado.</div>`;else if(c.planejado>0&&uso>=80)alertas+=`<div class="alerta atencao">⚠️ ${c.nome} já usou ${uso}% do planejado.</div>`});
+document.getElementById("resumoCategorias").innerHTML=resumo;document.getElementById("alertas").innerHTML=alertas||'<div class="alerta ok">✅ Tudo dentro do planejado.</div>';
+
+let score=Math.max(0,100-Math.max(0,perc-70)-estouradas*10);
+document.getElementById("pontuacaoSaude").innerText=Math.round(score);
+document.getElementById("textoSaude").innerText=score>=85?"Excelente controle.":score>=65?"Atenção aos gastos.":"Cuidado, orçamento comprometido.";
+
+let listaCat="";categorias.forEach((c,i)=>{listaCat+=`<tr><td><input value="${c.nome}" onchange="editarCategoria(${i},'nome',this.value)"></td><td><input type="number" value="${c.planejado}" onchange="editarCategoria(${i},'planejado',this.value)"></td><td><button class="danger" onclick="excluirCategoria(${i})">Excluir</button></td></tr>`});document.getElementById("listaCategorias").innerHTML=listaCat;
+
+let termo=(document.getElementById("pesquisa")?.value||"").toLowerCase(),lista="";
+gf.filter(g=>g.descricao.toLowerCase().includes(termo)||g.categoria.toLowerCase().includes(termo)).sort((a,b)=>b.data.localeCompare(a.data)).forEach(g=>{let i=gastos.indexOf(g),par=g.totalParcelas>1?g.parcelaAtual+"/"+g.totalParcelas:"1x";lista+=`<tr><td>${new Date(g.data+"T00:00:00").toLocaleDateString("pt-BR")}</td><td>${g.descricao}</td><td>${g.categoria}</td><td>${par}</td><td>${moeda(g.valor)}</td><td><button class="danger" onclick="excluirGasto(${i})">X</button></td></tr>`});document.getElementById("listaGastos").innerHTML=lista;
+
+atualizarParcelados();atualizarGrafico();atualizarProximasFaturas();
+}
+function atualizarParcelados(){let grupos={};gastos.filter(g=>g.totalParcelas>1).forEach(g=>{if(!grupos[g.grupoId])grupos[g.grupoId]=[];grupos[g.grupoId].push(g)});let html="";Object.values(grupos).forEach(arr=>{arr.sort((a,b)=>a.parcelaAtual-b.parcelaAtual);let first=arr[0],totalParcelas=first.totalParcelas,total=first.valorTotal||arr.reduce((s,g)=>s+g.valor,0),restam=arr.filter(g=>new Date(g.data+"T00:00:00")>=new Date()).length,saldo=arr.filter(g=>new Date(g.data+"T00:00:00")>=new Date()).reduce((s,g)=>s+Number(g.valor),0);html+=`<tr><td>${first.descricao}</td><td>${moeda(total)}</td><td>${totalParcelas}x</td><td>${restam}</td><td>${moeda(saldo)}</td></tr>`});document.getElementById("listaParcelados").innerHTML=html||'<tr><td colspan="5">Nenhuma compra parcelada ativa.</td></tr>'}
+function atualizarGrafico(){let tc=totalCat();let max=Math.max(1,...Object.values(tc));let html="";categorias.forEach(c=>{let v=tc[c.nome]||0;if(v>0){html+=`<div class="grafico-linha"><div class="topo"><span>${c.nome}</span><b>${moeda(v)}</b></div><div class="barra-bg"><div class="barra" style="width:${Math.round(v/max*100)}%"></div></div></div>`}});document.getElementById("graficoCategorias").innerHTML=html||"<p class='info'>Sem gastos nesta fatura.</p>"}
+function atualizarProximasFaturas(){
+let html="";
+let base=new Date(document.getElementById("dataFiltro").value+"T00:00:00");
+for(let i=0;i<4;i++){
+let d=new Date(base.getFullYear(),base.getMonth()+i,base.getDate());
+let iso=d.toISOString().slice(0,10);
+let total=gastosFatura(iso).reduce((s,g)=>s+Number(g.valor),0);
+let p=periodo(iso);
+let titulo=i===0?"Fatura atual":"Próxima fatura";
+html+=`<div class="fatura-card">
+  <div>
+    <span>${titulo}</span>
+    <b>${p.ini.toLocaleDateString("pt-BR")} a ${p.fim.toLocaleDateString("pt-BR")}</b>
+  </div>
+  <div class="valor-previsto">${moeda(total)}</div>
+</div>`;
+}
+document.getElementById("proximasFaturas").innerHTML=html;
+}
+function simular(){let valor=Number(document.getElementById("valorSimular").value),cat=document.getElementById("categoriaSimular").value,par=Number(document.getElementById("parcelasSimular").value)||1;if(valor<=0){alert("Digite um valor.");return}let parcela=valor/par,tc=totalCat(),c=categorias.find(x=>x.nome===cat),saldoCat=(c.planejado||0)-((tc[cat]||0)+parcela);document.getElementById("resultadoSimulacao").innerHTML=saldoCat>=0?`<div class="alerta ok">✅ Cabe na fatura atual. Primeira parcela: ${moeda(parcela)}. Restará ${moeda(saldoCat)} na categoria.</div>`:`<div class="alerta perigo">⚠️ A primeira parcela ultrapassa a categoria em ${moeda(Math.abs(saldoCat))}.</div>`}
+function exportarCSV(){let csv="Data;Descrição;Categoria;Parcela;Valor\n";gastos.forEach(g=>csv+=`${g.data};${g.descricao};${g.categoria};${g.totalParcelas>1?g.parcelaAtual+"/"+g.totalParcelas:"1x"};${String(g.valor).replace(".",",")}\n`);let blob=new Blob([csv],{type:"text/csv;charset=utf-8;"});let a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="fatura_facil.csv";a.click()}
+function apagarGastos(){if(confirm("Apagar todos os gastos?")){gastos=[];salvar();atualizarTudo()}}
+function baixarBackup(){let dados={categorias,gastos,config,geradoEm:new Date().toISOString()};let blob=new Blob([JSON.stringify(dados,null,2)],{type:"application/json"});let a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="backup_fatura_facil.json";a.click()}
+function restaurarBackup(e){let file=e.target.files[0];if(!file)return;let r=new FileReader();r.onload=function(){try{let d=JSON.parse(r.result);if(d.categorias&&d.gastos&&d.config){categorias=d.categorias;gastos=d.gastos;config=d.config;salvar();iniciarDias();atualizarTudo();alert("Backup restaurado com sucesso.")}else alert("Arquivo de backup inválido.")}catch(err){alert("Erro ao restaurar backup.")}};r.readAsText(file)}
+document.getElementById("dataFiltro").addEventListener("change",atualizarTudo);
+iniciarDias();iniciarParcelas();atualizarTudo();
+if("serviceWorker" in navigator){navigator.serviceWorker.register("service-worker.js")}
+</script>
+</body>
+</html>
