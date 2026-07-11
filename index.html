@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Fatura Fácil V2.1</title>
+<title>Fatura Fácil V2.5</title>
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#0f2f4a">
 <style>
@@ -41,7 +41,206 @@ table{width:100%;border-collapse:collapse;margin-top:10px;min-width:760px}td,th{
 .fatura-card b{display:block;margin-top:4px;font-size:14px;color:#0f2f4a}
 .fatura-card .valor-previsto{font-size:18px;font-weight:900;color:#12395b;text-align:right;white-space:nowrap}
 
+
+/* Tabela com primeira coluna congelada */
+.card table{border-collapse:separate;border-spacing:0}
+.card thead th{position:sticky;top:0;z-index:4;background:#ffffff}
+.card th:first-child,.card td:first-child{position:sticky;left:0;min-width:230px;max-width:230px;white-space:normal;word-break:break-word;z-index:3;background:#ffffff;box-shadow:8px 0 12px -12px rgba(15,47,74,.65)}
+.card thead th:first-child{z-index:6;background:#f8fafc}
+.card tbody tr:nth-child(even) td:first-child{background:#f8fafc}
+.card tbody tr:nth-child(odd) td:first-child{background:#ffffff}
+.card th:first-child,.card td:first-child{background:#1f1f1f;box-shadow:8px 0 12px -12px rgba(0,0,0,.9)}.card thead th:first-child{background:#252525}.card tbody tr:nth-child(even) td:first-child{background:#242424}.card tbody tr:nth-child(odd) td:first-child{background:#1f1f1f}}
+
+
+/* Correção V2.3: coluna fixa sempre legível no tema claro */
+.card table{
+  border-collapse: separate;
+  border-spacing: 0;
+}
+.card thead th{
+  position: sticky;
+  top: 0;
+  z-index: 4;
+  background: #f8fafc !important;
+  color: #1f2933 !important;
+}
+.card th:first-child,
+.card td:first-child{
+  position: sticky;
+  left: 0;
+  min-width: 230px;
+  max-width: 230px;
+  white-space: normal;
+  word-break: break-word;
+  z-index: 3;
+  color: #1f2933 !important;
+  background: #ffffff !important;
+  box-shadow: 8px 0 14px -12px rgba(15,47,74,.55);
+}
+.card thead th:first-child{
+  z-index: 6;
+  background: #f8fafc !important;
+}
+.card tbody tr:nth-child(even) td:first-child{
+  background: #f8fafc !important;
+}
+.card tbody tr:nth-child(odd) td:first-child{
+  background: #ffffff !important;
+}
+.card tbody tr:nth-child(even) td:not(:first-child){
+  background:#f8fafc;
+}
+
 @media(max-width:700px){.kpi,.form2{grid-template-columns:1fr}table{min-width:780px}}
+
+/* Correção V2.4: valores visíveis ao rolar horizontalmente */
+.card{
+  overflow-x:auto;
+  -webkit-overflow-scrolling:touch;
+}
+.card table{
+  width:max-content !important;
+  min-width:820px !important;
+  table-layout:fixed;
+  border-collapse:separate;
+  border-spacing:0;
+}
+.card th,
+.card td{
+  color:#1f2933 !important;
+  background:#ffffff;
+}
+.card th:first-child,
+.card td:first-child{
+  position:sticky;
+  left:0;
+  width:175px !important;
+  min-width:175px !important;
+  max-width:175px !important;
+  white-space:normal;
+  word-break:break-word;
+  z-index:5;
+  background:#ffffff !important;
+  color:#1f2933 !important;
+  box-shadow:6px 0 10px -8px rgba(15,47,74,.7);
+}
+.card thead th:first-child{
+  z-index:8;
+  background:#f8fafc !important;
+}
+.card th:not(:first-child),
+.card td:not(:first-child){
+  width:145px !important;
+  min-width:145px !important;
+  max-width:145px !important;
+  text-align:right;
+  color:#1f2933 !important;
+}
+.card tbody tr:nth-child(even) td{
+  background:#f8fafc;
+}
+.card tbody tr:nth-child(even) td:first-child{
+  background:#f8fafc !important;
+}
+.card tbody tr:nth-child(odd) td:first-child{
+  background:#ffffff !important;
+}
+
+
+/* V2.5 — Coluna fixa real em bloco separado */
+.resumo-split{
+  display:grid;
+  grid-template-columns:155px minmax(0,1fr);
+  width:100%;
+  border:1px solid #e5e7eb;
+  border-radius:14px;
+  overflow:hidden;
+  background:#fff;
+}
+.resumo-fixo{
+  position:relative;
+  z-index:3;
+  background:#fff;
+  border-right:2px solid #dbeafe;
+  box-shadow:5px 0 12px -10px rgba(15,47,74,.75);
+}
+.resumo-valores-scroll{
+  min-width:0;
+  overflow-x:auto;
+  -webkit-overflow-scrolling:touch;
+  background:#fff;
+}
+.resumo-valores{
+  display:grid;
+  grid-template-columns:repeat(4,132px);
+  min-width:528px;
+}
+.resumo-cabecalho{
+  height:54px;
+  padding:10px 8px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+  font-size:12px;
+  font-weight:800;
+  color:#334155;
+  background:#f8fafc;
+  border-bottom:1px solid #d1d5db;
+}
+.categoria-cabecalho{
+  justify-content:flex-start;
+  padding-left:12px;
+}
+.resumo-linha-fixa{
+  min-height:60px;
+  padding:10px 12px;
+  display:flex;
+  align-items:center;
+  font-size:12px;
+  line-height:1.25;
+  font-weight:600;
+  color:#1f2933;
+  border-bottom:1px solid #e5e7eb;
+  background:#fff;
+  overflow-wrap:anywhere;
+}
+.resumo-linha-fixa:nth-child(even){
+  background:#f8fafc;
+}
+.resumo-valores-corpo{
+  display:contents;
+}
+.resumo-celula{
+  min-height:60px;
+  padding:10px 8px;
+  display:flex;
+  align-items:center;
+  justify-content:flex-end;
+  text-align:right;
+  font-size:12px;
+  color:#1f2933;
+  background:#fff;
+  border-bottom:1px solid #e5e7eb;
+}
+.resumo-celula.linha-par{
+  background:#f8fafc;
+}
+.resumo-celula.verde{color:#15803d;font-weight:800}
+.resumo-celula.amarelo{color:#d97706;font-weight:800}
+.resumo-celula.vermelho{color:#b91c1c;font-weight:800}
+.resumo-valores-scroll::-webkit-scrollbar{
+  height:7px;
+}
+.resumo-valores-scroll::-webkit-scrollbar-thumb{
+  background:#94a3b8;
+  border-radius:999px;
+}
+@media(max-width:420px){
+  .resumo-split{grid-template-columns:140px minmax(0,1fr)}
+  .resumo-valores{grid-template-columns:repeat(4,125px);min-width:500px}
+}
+
 </style>
 </head>
 <body>
@@ -53,7 +252,7 @@ table{width:100%;border-collapse:collapse;margin-top:10px;min-width:760px}td,th{
 <main>
 <section id="inicio" class="tela ativa">
 <div class="card">
-<span class="badge">V2.1 Teste</span>
+<span class="badge">V2.5 Teste</span>
 <h2>Dashboard</h2>
 <label>Data dentro da fatura</label>
 <input type="date" id="dataFiltro">
@@ -79,11 +278,24 @@ table{width:100%;border-collapse:collapse;margin-top:10px;min-width:760px}td,th{
 
 <div class="card">
 <h2>Resumo por categoria</h2>
-<p class="info">Arraste a tabela para o lado se necessário.</p>
-<table>
-<thead><tr><th>Categoria</th><th>Gasto</th><th>Planejado</th><th>Falta gastar</th><th>Uso</th></tr></thead>
-<tbody id="resumoCategorias"></tbody>
-</table>
+<p class="info">A coluna Categoria fica fixa. Deslize somente os valores para o lado.</p>
+
+<div class="resumo-split">
+  <div class="resumo-fixo">
+    <div class="resumo-cabecalho categoria-cabecalho">Categoria 📌</div>
+    <div id="resumoCategoriasFixas"></div>
+  </div>
+
+  <div class="resumo-valores-scroll">
+    <div class="resumo-valores">
+      <div class="resumo-cabecalho">Gasto</div>
+      <div class="resumo-cabecalho">Planejado</div>
+      <div class="resumo-cabecalho">Falta gastar</div>
+      <div class="resumo-cabecalho">Uso</div>
+      <div id="resumoCategoriasValores" class="resumo-valores-corpo"></div>
+    </div>
+  </div>
+</div>
 </div>
 </section>
 
@@ -221,9 +433,33 @@ document.getElementById("periodo").innerText="Fatura: "+p.ini.toLocaleDateString
 document.getElementById("totalFatura").innerText=moeda(total);document.getElementById("planejadoTotal").innerText=moeda(planejado);document.getElementById("saldoTotal").innerText=moeda(saldo);document.getElementById("diasFechamento").innerText=dias+" dias";document.getElementById("porDia").innerText=moeda(porDia);
 document.getElementById("barraTotal").style.width=Math.min(100,perc)+"%";document.getElementById("barraTotal").style.background=perc>=100?"#ef4444":perc>=80?"#f59e0b":"#22c55e";document.getElementById("usoTotalTexto").innerText=perc+"% do orçamento total";
 
-let tc=totalCat(),resumo="",alertas="",estouradas=0;
-categorias.forEach(c=>{let gasto=tc[c.nome]||0,falta=Number(c.planejado||0)-gasto,uso=c.planejado>0?Math.round(gasto/c.planejado*100):0,classe=uso>=100?"vermelho":uso>=80?"amarelo":"verde",classeFalta=falta<0?"vermelho":"verde";if(uso>=100)estouradas++;resumo+=`<tr><td>${c.nome}</td><td>${moeda(gasto)}</td><td>${moeda(c.planejado)}</td><td class="${classeFalta}">${falta>=0?moeda(falta):"Estourou "+moeda(Math.abs(falta))}</td><td class="${classe}">${c.planejado>0?uso+"%":"-"}</td></tr>`;if(c.planejado>0&&uso>=100)alertas+=`<div class="alerta perigo">🚨 ${c.nome} passou do planejado.</div>`;else if(c.planejado>0&&uso>=80)alertas+=`<div class="alerta atencao">⚠️ ${c.nome} já usou ${uso}% do planejado.</div>`});
-document.getElementById("resumoCategorias").innerHTML=resumo;document.getElementById("alertas").innerHTML=alertas||'<div class="alerta ok">✅ Tudo dentro do planejado.</div>';
+let tc=totalCat(),resumoFixo="",resumoValores="",alertas="",estouradas=0;
+categorias.forEach((c,indice)=>{
+  let gasto=tc[c.nome]||0;
+  let falta=Number(c.planejado||0)-gasto;
+  let uso=c.planejado>0?Math.round(gasto/c.planejado*100):0;
+  let classe=uso>=100?"vermelho":uso>=80?"amarelo":"verde";
+  let classeFalta=falta<0?"vermelho":"verde";
+  let linhaPar=indice%2===1?" linha-par":"";
+
+  if(uso>=100)estouradas++;
+
+  resumoFixo+=`<div class="resumo-linha-fixa">${c.nome}</div>`;
+  resumoValores+=`
+    <div class="resumo-celula${linhaPar}">${moeda(gasto)}</div>
+    <div class="resumo-celula${linhaPar}">${moeda(c.planejado)}</div>
+    <div class="resumo-celula ${classeFalta}${linhaPar}">${falta>=0?moeda(falta):"Estourou "+moeda(Math.abs(falta))}</div>
+    <div class="resumo-celula ${classe}${linhaPar}">${c.planejado>0?uso+"%":"-"}</div>`;
+
+  if(c.planejado>0&&uso>=100){
+    alertas+=`<div class="alerta perigo">🚨 ${c.nome} passou do planejado.</div>`;
+  }else if(c.planejado>0&&uso>=80){
+    alertas+=`<div class="alerta atencao">⚠️ ${c.nome} já usou ${uso}% do planejado.</div>`;
+  }
+});
+document.getElementById("resumoCategoriasFixas").innerHTML=resumoFixo;
+document.getElementById("resumoCategoriasValores").innerHTML=resumoValores;
+document.getElementById("alertas").innerHTML=alertas||'<div class="alerta ok">✅ Tudo dentro do planejado.</div>';
 
 let score=Math.max(0,100-Math.max(0,perc-70)-estouradas*10);
 document.getElementById("pontuacaoSaude").innerText=Math.round(score);

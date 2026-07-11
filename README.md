@@ -1,5 +1,11 @@
-# Fatura Fácil V2.1 Teste
+# Fatura Fácil V2.5
 
-Atualização: próximas faturas em cartões com valor previsto visível na mesma tela.
+Nova estrutura do resumo por categoria:
+- Categorias em bloco fixo independente.
+- Valores em bloco horizontal rolável.
+- Sem sobreposição de colunas.
+- Linhas sincronizadas visualmente.
+- Melhor funcionamento em celulares.
 
-Abra com ?v=21 para evitar cache.
+Substitua no GitHub: index.html, manifest.json e service-worker.js.
+Depois abra com ?v=25.
