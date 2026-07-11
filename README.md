@@ -1,11 +1,12 @@
-# Fatura Fácil V2.5
+# Fatura Fácil V2.6
 
-Nova estrutura do resumo por categoria:
-- Categorias em bloco fixo independente.
-- Valores em bloco horizontal rolável.
-- Sem sobreposição de colunas.
-- Linhas sincronizadas visualmente.
-- Melhor funcionamento em celulares.
+Atualização da tela Categorias:
+- Categorias em cartões individuais.
+- Sem rolagem horizontal.
+- Nome e valor planejado visíveis.
+- Botões Editar e Excluir.
+- Edição dentro do próprio cartão.
+- Pesquisa de categorias.
 
 Substitua no GitHub: index.html, manifest.json e service-worker.js.
-Depois abra com ?v=25.
+Depois abra com ?v=26.
