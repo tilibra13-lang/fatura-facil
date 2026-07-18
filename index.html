@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#0b4f75">
 <link rel="manifest" href="manifest.json">
-<title>Fatura Fácil V3.6</title>
+<title>Fatura Fácil V3.7</title>
 <style>
 :root{
   --azul:#07517b;
@@ -365,6 +365,28 @@ input,select{
 .category-summary .summary-value{font-size:15px;font-weight:800;white-space:nowrap}
 @media(max-width:440px){.category-filter-btn{font-size:12px}.category-summary{grid-template-columns:1fr}}
 
+
+/* V3.7 */
+#detalheConteudo .list-item .row{display:grid;grid-template-columns:minmax(0,1fr) max-content;align-items:start;gap:10px 14px}
+#detalheConteudo .list-item .row>div:first-child{min-width:0}
+#detalheConteudo .list-item .title{white-space:normal;overflow-wrap:normal;word-break:normal;hyphens:none;line-height:1.35}
+#detalheConteudo .list-item .value{white-space:nowrap;justify-self:end;text-align:right}
+.config-group{margin-top:20px;padding-top:18px;border-top:1px solid var(--border)}
+.config-group:first-of-type{border-top:0;padding-top:0}
+.config-group h3{margin:0 0 12px;font-size:18px}
+.category-editor-list{display:grid;gap:12px;margin-top:14px}
+.category-editor-card{border:1px solid var(--border);border-radius:16px;padding:14px;background:rgba(255,255,255,.025)}
+.category-editor-grid{display:grid;grid-template-columns:minmax(0,1fr) 145px;gap:10px;align-items:end}
+.category-editor-card label{display:block;font-size:12px;color:var(--muted);margin-bottom:5px}
+.category-editor-card input{width:100%}
+.category-editor-actions{display:flex;gap:8px;margin-top:10px}
+.btn-small{padding:9px 12px;border-radius:10px;font-size:13px;font-weight:800}
+@media(max-width:520px){
+  #detalheConteudo .list-item .row{grid-template-columns:1fr}
+  #detalheConteudo .list-item .value{justify-self:start;font-size:20px;margin-top:2px}
+  .category-editor-grid{grid-template-columns:1fr}
+}
+
 </style>
 </head>
 <body>
@@ -458,15 +480,29 @@ input,select{
 </section>
 
 <section id="configuracoes" class="section">
-  <div class="card"><h2>Configurações</h2>
-    <label>Dia de fechamento</label><input id="diaFechamento" type="number" min="1" max="28">
-    <div class="actions">
-      <button class="btn-primary" onclick="salvarConfig()">Salvar</button>
-      <button class="btn-secondary" onclick="baixarBackup()">Baixar backup</button>
-      <button class="btn-secondary" onclick="document.getElementById('arquivoBackup').click()">Restaurar backup</button>
-      <input id="arquivoBackup" class="hidden" type="file" accept=".json" onchange="restaurarBackup(event)">
+  <div class="card">
+    <h2>Configurações</h2>
+    <div class="config-group">
+      <h3>Fatura</h3>
+      <label>Dia de fechamento</label>
+      <input id="diaFechamento" type="number" min="1" max="28">
+      <div class="actions"><button class="btn-primary" onclick="salvarConfig()">Salvar fechamento</button></div>
     </div>
-    <p class="muted">V3.6 — Gastos futuros por categoria — 76 lançamentos migrados.</p>
+    <div class="config-group">
+      <h3>Categorias e gasto planejado</h3>
+      <div class="muted">Renomeie categorias e altere o valor planejado.</div>
+      <div id="editorCategorias" class="category-editor-list"></div>
+      <div class="actions"><button class="btn-secondary" onclick="adicionarCategoria()">＋ Nova categoria</button></div>
+    </div>
+    <div class="config-group">
+      <h3>Backup</h3>
+      <div class="actions">
+        <button class="btn-secondary" onclick="baixarBackup()">Baixar backup</button>
+        <button class="btn-secondary" onclick="document.getElementById('arquivoBackup').click()">Restaurar backup</button>
+        <input id="arquivoBackup" class="hidden" type="file" accept=".json" onchange="restaurarBackup(event)">
+      </div>
+    </div>
+    <p class="muted">V3.7 — Categorias e orçamento restaurados — 76 lançamentos migrados.</p>
   </div>
 </section>
 
@@ -517,6 +553,7 @@ function mostrarSecao(id,botao){
   if(botao)botao.classList.add("active");
   if(id==="inicio")renderInicio();
   if(id==="historico")renderHistorico();
+  if(id==="configuracoes")renderEditorCategorias();
   if(id==="relatorio")renderRelatorio();
   if(id==="configuracoes")renderConfig();
   window.scrollTo(0,0);
@@ -725,6 +762,49 @@ function adicionarGasto(){
   salvarTudo();alert("Gasto salvo.");document.getElementById("fDesc").value="";document.getElementById("fValor").value="";mostrarSecao("inicio",document.querySelector('[data-sec="inicio"]'));
 }
 function renderConfig(){document.getElementById("diaFechamento").value=config.diaFechamento||13}
+
+function escaparHtml(txt){
+  return String(txt??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[c]));
+}
+function renderEditorCategorias(){
+  const box=document.getElementById("editorCategorias");
+  if(!box)return;
+  box.innerHTML=categorias.map((c,i)=>`
+    <div class="category-editor-card">
+      <div class="category-editor-grid">
+        <div><label>Nome da categoria</label><input id="catNome_${i}" value="${escaparHtml(c.nome)}"></div>
+        <div><label>Planejado (R$)</label><input id="catPlan_${i}" type="number" min="0" step="0.01" value="${Number(c.planejado||0)}"></div>
+      </div>
+      <div class="category-editor-actions">
+        <button class="btn-primary btn-small" onclick="salvarCategoria(${i})">Salvar</button>
+        <button class="btn-danger btn-small" onclick="excluirCategoria(${i})">Excluir</button>
+      </div>
+    </div>`).join("")||'<div class="empty">Nenhuma categoria cadastrada.</div>';
+}
+function salvarCategoria(i){
+  const antiga=categorias[i]?.nome;
+  const novo=document.getElementById(`catNome_${i}`).value.trim();
+  const planejado=Math.max(0,Number(document.getElementById(`catPlan_${i}`).value||0));
+  if(!novo){alert("Digite o nome da categoria.");return}
+  if(categorias.some((c,idx)=>idx!==i&&c.nome.toLowerCase()===novo.toLowerCase())){alert("Já existe uma categoria com esse nome.");return}
+  categorias[i]={nome:novo,planejado};
+  if(antiga!==novo)gastos.forEach(g=>{if(g.categoria===antiga)g.categoria=novo});
+  salvarTudo();preencherCategorias();renderEditorCategorias();renderInicio();renderRelatorio();renderHistorico();
+  alert("Categoria e gasto planejado atualizados.");
+}
+function adicionarCategoria(){
+  categorias.push({nome:"NOVA CATEGORIA",planejado:0});
+  salvarTudo();preencherCategorias();renderEditorCategorias();
+  setTimeout(()=>{const i=categorias.length-1;const c=document.getElementById(`catNome_${i}`);if(c){c.focus();c.select()}},50);
+}
+function excluirCategoria(i){
+  const cat=categorias[i]; if(!cat)return;
+  const vinculados=gastos.filter(g=>g.categoria===cat.nome).length;
+  if(vinculados){alert(`Esta categoria possui ${vinculados} gasto(s). Renomeie a categoria em vez de excluir.`);return}
+  if(!confirm(`Excluir a categoria "${cat.nome}"?`))return;
+  categorias.splice(i,1);salvarTudo();preencherCategorias();renderEditorCategorias();renderInicio();
+}
+
 function salvarConfig(){config.diaFechamento=Number(document.getElementById("diaFechamento").value||13);salvarTudo();renderInicio();alert("Configuração salva.")}
 function baixarBackup(){const blob=new Blob([JSON.stringify({categorias,gastos,config,geradoEm:new Date().toISOString()},null,2)],{type:"application/json"});const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="backup_fatura_facil.json";a.click();URL.revokeObjectURL(a.href)}
 function restaurarBackup(ev){const f=ev.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{try{const b=JSON.parse(r.result);categorias=b.categorias||[];gastos=b.gastos||[];config=b.config||{diaFechamento:13};salvarTudo();preencherCategorias();renderInicio();alert("Backup restaurado.")}catch(e){alert("Arquivo inválido.")}};r.readAsText(f)}
