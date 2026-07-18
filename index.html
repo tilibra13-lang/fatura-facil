@@ -2,668 +2,736 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Fatura Fácil V2.6</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0b4f75">
 <link rel="manifest" href="manifest.json">
-<meta name="theme-color" content="#0f2f4a">
+<title>Fatura Fácil V3.6</title>
 <style>
 :root{
---azul:#0f2f4a;--azul2:#176b9c;--fundo:#eef4f8;--card:#ffffff;--verde:#15803d;--amarelo:#d97706;--vermelho:#b91c1c;--cinza:#64748b;
+  --azul:#07517b;
+  --azul2:#0d739f;
+  --fundo:#07141c;
+  --card:#1d1d1f;
+  --card2:#202124;
+  --texto:#eef4ff;
+  --muted:#aeb9cc;
+  --linha:#50545d;
+  --verde:#008c19;
+  --vermelho:#cf4646;
 }
 *{box-sizing:border-box}
-body{margin:0;font-family:Arial,sans-serif;background:var(--fundo);color:#1f2933;padding-bottom:92px}
-header{background:linear-gradient(135deg,var(--azul),var(--azul2));color:white;padding:24px 18px 30px;border-radius:0 0 28px 28px}
-h1{margin:0;font-size:27px}
-header p{margin:6px 0 0;font-size:14px;opacity:.92}
-main{padding:14px;max-width:980px;margin:auto;margin-top:-18px}
-.card{background:white;border-radius:20px;padding:16px;margin-bottom:14px;box-shadow:0 8px 24px #00000018;overflow-x:auto}
-.valor{font-size:36px;font-weight:900;color:#0f2f4a;margin:6px 0 12px}
-.badge{display:inline-block;background:#dbeafe;color:#075985;border-radius:999px;padding:5px 11px;font-size:12px;font-weight:bold;margin-bottom:8px}
-input,select,button{width:100%;padding:12px;margin-top:6px;border-radius:13px;border:1px solid #d1d5db;font-size:15px}
-button{background:var(--azul);color:white;border:0;font-weight:bold}
-button.sec{background:#475569}button.danger{background:var(--vermelho)}
-.nav{position:fixed;bottom:0;left:0;right:0;background:white;display:grid;grid-template-columns:repeat(5,1fr);gap:4px;padding:8px;box-shadow:0 -3px 18px #0002;z-index:10}
-.nav button{font-size:11px;background:#e8eef5;color:#12395b;padding:9px 3px}.nav button.ativo{background:#12395b;color:white}
-.tela{display:none}.tela.ativa{display:block}
-.kpi{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.kpi div{background:#f1f5f9;border-radius:15px;padding:12px}.kpi span{display:block;font-size:12px;color:#64748b}.kpi b{display:block;margin-top:5px;color:#0f2f4a}
-table{width:100%;border-collapse:collapse;margin-top:10px;min-width:760px}td,th{border-bottom:1px solid #e5e7eb;padding:8px;font-size:12px;text-align:left;white-space:nowrap}
-.alerta{padding:10px;border-radius:12px;margin-top:10px;font-weight:bold}.ok{background:#dcfce7;color:#166534}.atencao{background:#fef3c7;color:#92400e}.perigo{background:#fee2e2;color:#991b1b}
-.verde{color:var(--verde);font-weight:bold}.amarelo{color:var(--amarelo);font-weight:bold}.vermelho{color:var(--vermelho);font-weight:bold}.info{font-size:13px;color:#64748b}
-.form2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.barra-bg{height:12px;background:#e5e7eb;border-radius:999px;overflow:hidden;margin-top:6px}
-.barra{height:100%;background:#22c55e;width:0%;border-radius:999px}
-.grafico-linha{margin:10px 0}
-.grafico-linha .topo{display:flex;justify-content:space-between;font-size:13px;margin-bottom:4px}
-.saude{font-size:42px;font-weight:900;color:#0f2f4a}
-
-.fatura-card{display:flex;justify-content:space-between;align-items:center;gap:12px;background:#f8fafc;border:1px solid #e5e7eb;border-radius:14px;padding:12px;margin-top:10px}
-.fatura-card span{display:block;font-size:12px;color:#64748b}
-.fatura-card b{display:block;margin-top:4px;font-size:14px;color:#0f2f4a}
-.fatura-card .valor-previsto{font-size:18px;font-weight:900;color:#12395b;text-align:right;white-space:nowrap}
-
-
-/* Tabela com primeira coluna congelada */
-.card table{border-collapse:separate;border-spacing:0}
-.card thead th{position:sticky;top:0;z-index:4;background:#ffffff}
-.card th:first-child,.card td:first-child{position:sticky;left:0;min-width:230px;max-width:230px;white-space:normal;word-break:break-word;z-index:3;background:#ffffff;box-shadow:8px 0 12px -12px rgba(15,47,74,.65)}
-.card thead th:first-child{z-index:6;background:#f8fafc}
-.card tbody tr:nth-child(even) td:first-child{background:#f8fafc}
-.card tbody tr:nth-child(odd) td:first-child{background:#ffffff}
-.card th:first-child,.card td:first-child{background:#1f1f1f;box-shadow:8px 0 12px -12px rgba(0,0,0,.9)}.card thead th:first-child{background:#252525}.card tbody tr:nth-child(even) td:first-child{background:#242424}.card tbody tr:nth-child(odd) td:first-child{background:#1f1f1f}}
-
-
-/* Correção V2.3: coluna fixa sempre legível no tema claro */
-.card table{
-  border-collapse: separate;
-  border-spacing: 0;
+html,body{max-width:100%;overflow-x:hidden}
+body{
+  margin:0;
+  font-family:Arial,sans-serif;
+  background:linear-gradient(180deg,#07141c 0%,#0a151b 100%);
+  color:var(--texto);
+  padding-bottom:98px;
 }
-.card thead th{
-  position: sticky;
-  top: 0;
-  z-index: 4;
-  background: #f8fafc !important;
-  color: #1f2933 !important;
+header{
+  background:linear-gradient(135deg,#07517b,#0877a4);
+  color:white;
+  padding:38px 24px 48px;
+  border-radius:0 0 38px 38px;
 }
-.card th:first-child,
-.card td:first-child{
-  position: sticky;
-  left: 0;
-  min-width: 230px;
-  max-width: 230px;
-  white-space: normal;
-  word-break: break-word;
-  z-index: 3;
-  color: #1f2933 !important;
-  background: #ffffff !important;
-  box-shadow: 8px 0 14px -12px rgba(15,47,74,.55);
-}
-.card thead th:first-child{
-  z-index: 6;
-  background: #f8fafc !important;
-}
-.card tbody tr:nth-child(even) td:first-child{
-  background: #f8fafc !important;
-}
-.card tbody tr:nth-child(odd) td:first-child{
-  background: #ffffff !important;
-}
-.card tbody tr:nth-child(even) td:not(:first-child){
-  background:#f8fafc;
-}
-
-@media(max-width:700px){.kpi,.form2{grid-template-columns:1fr}table{min-width:780px}}
-
-/* Correção V2.4: valores visíveis ao rolar horizontalmente */
+header h1{margin:0;font-size:36px}
+header p{margin:12px 0 0;font-size:20px}
+main{padding:18px;max-width:760px;margin:auto}
+.section{display:none}
+.section.active{display:block}
 .card{
-  overflow-x:auto;
-  -webkit-overflow-scrolling:touch;
-}
-.card table{
-  width:max-content !important;
-  min-width:820px !important;
-  table-layout:fixed;
-  border-collapse:separate;
-  border-spacing:0;
-}
-.card th,
-.card td{
-  color:#1f2933 !important;
-  background:#ffffff;
-}
-.card th:first-child,
-.card td:first-child{
-  position:sticky;
-  left:0;
-  width:175px !important;
-  min-width:175px !important;
-  max-width:175px !important;
-  white-space:normal;
-  word-break:break-word;
-  z-index:5;
-  background:#ffffff !important;
-  color:#1f2933 !important;
-  box-shadow:6px 0 10px -8px rgba(15,47,74,.7);
-}
-.card thead th:first-child{
-  z-index:8;
-  background:#f8fafc !important;
-}
-.card th:not(:first-child),
-.card td:not(:first-child){
-  width:145px !important;
-  min-width:145px !important;
-  max-width:145px !important;
-  text-align:right;
-  color:#1f2933 !important;
-}
-.card tbody tr:nth-child(even) td{
-  background:#f8fafc;
-}
-.card tbody tr:nth-child(even) td:first-child{
-  background:#f8fafc !important;
-}
-.card tbody tr:nth-child(odd) td:first-child{
-  background:#ffffff !important;
-}
-
-
-/* V2.5 — Coluna fixa real em bloco separado */
-.resumo-split{
-  display:grid;
-  grid-template-columns:155px minmax(0,1fr);
-  width:100%;
-  border:1px solid #e5e7eb;
-  border-radius:14px;
+  background:var(--card);
+  border-radius:30px;
+  padding:24px;
+  margin-bottom:22px;
+  box-shadow:0 12px 28px rgba(0,0,0,.28);
   overflow:hidden;
-  background:#fff;
 }
-.resumo-fixo{
-  position:relative;
-  z-index:3;
-  background:#fff;
-  border-right:2px solid #dbeafe;
-  box-shadow:5px 0 12px -10px rgba(15,47,74,.75);
+.card h2{
+  font-size:30px;
+  margin:0 0 18px;
+  color:var(--texto);
 }
-.resumo-valores-scroll{
-  min-width:0;
-  overflow-x:auto;
-  -webkit-overflow-scrolling:touch;
-  background:#fff;
-}
-.resumo-valores{
+.summary-grid{
   display:grid;
-  grid-template-columns:repeat(4,132px);
-  min-width:528px;
-}
-.resumo-cabecalho{
-  height:54px;
-  padding:10px 8px;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  text-align:center;
-  font-size:12px;
-  font-weight:800;
-  color:#334155;
-  background:#f8fafc;
-  border-bottom:1px solid #d1d5db;
-}
-.categoria-cabecalho{
-  justify-content:flex-start;
-  padding-left:12px;
-}
-.resumo-linha-fixa{
-  min-height:60px;
-  padding:10px 12px;
-  display:flex;
-  align-items:center;
-  font-size:12px;
-  line-height:1.25;
-  font-weight:600;
-  color:#1f2933;
-  border-bottom:1px solid #e5e7eb;
-  background:#fff;
-  overflow-wrap:anywhere;
-}
-.resumo-linha-fixa:nth-child(even){
-  background:#f8fafc;
-}
-.resumo-valores-corpo{
-  display:contents;
-}
-.resumo-celula{
-  min-height:60px;
-  padding:10px 8px;
-  display:flex;
-  align-items:center;
-  justify-content:flex-end;
-  text-align:right;
-  font-size:12px;
-  color:#1f2933;
-  background:#fff;
-  border-bottom:1px solid #e5e7eb;
-}
-.resumo-celula.linha-par{
-  background:#f8fafc;
-}
-.resumo-celula.verde{color:#15803d;font-weight:800}
-.resumo-celula.amarelo{color:#d97706;font-weight:800}
-.resumo-celula.vermelho{color:#b91c1c;font-weight:800}
-.resumo-valores-scroll::-webkit-scrollbar{
-  height:7px;
-}
-.resumo-valores-scroll::-webkit-scrollbar-thumb{
-  background:#94a3b8;
-  border-radius:999px;
-}
-@media(max-width:420px){
-  .resumo-split{grid-template-columns:140px minmax(0,1fr)}
-  .resumo-valores{grid-template-columns:repeat(4,125px);min-width:500px}
-}
-
-
-/* V2.6 — Categorias em cartões, sem rolagem lateral */
-.categorias-cards{
-  display:grid;
-  grid-template-columns:1fr;
+  grid-template-columns:minmax(0,1fr) minmax(0,1fr);
   gap:12px;
-  margin-top:14px;
 }
-.categoria-card{
-  border:1px solid #e5e7eb;
-  border-radius:16px;
-  padding:14px;
-  background:#fff;
-  box-shadow:0 4px 12px rgba(15,47,74,.08);
+.summary{
+  background:#25272b;
+  border-radius:18px;
+  padding:16px;
+  min-width:0;
 }
-.categoria-card-topo{
-  display:flex;
-  justify-content:space-between;
-  align-items:flex-start;
-  gap:10px;
-}
-.categoria-card-nome{
-  font-size:15px;
-  font-weight:800;
-  color:#1f2933;
-  line-height:1.25;
+.summary small{color:var(--muted)}
+.summary b{
+  display:block;
+  font-size:22px;
+  margin-top:6px;
   overflow-wrap:anywhere;
 }
-.categoria-card-valor{
-  font-size:18px;
-  font-weight:900;
-  color:#0f2f4a;
-  white-space:nowrap;
+.list-item{
+  background:#202124;
+  border:1px solid #4b4f57;
+  border-radius:20px;
+  padding:17px;
+  margin:12px 0;
+  cursor:pointer;
+  user-select:none;
+  -webkit-user-select:none;
+  -webkit-tap-highlight-color:transparent;
+  width:100%;
+  max-width:100%;
+  overflow:hidden;
 }
-.categoria-card-legenda{
-  margin-top:4px;
-  font-size:12px;
-  color:#64748b;
-}
-.categoria-card-acoes{
+.list-item:active{transform:scale(.99);background:#26282c}
+.row{
   display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:8px;
-  margin-top:12px;
+  grid-template-columns:minmax(0,1fr) auto;
+  align-items:center;
+  gap:12px;
+  width:100%;
+  min-width:0;
 }
-.categoria-card-acoes button{
+.row>div:first-child{min-width:0}
+.title{
+  font-weight:700;
+  font-size:17px;
+  line-height:1.25;
+  overflow-wrap:anywhere;
+  word-break:break-word;
+}
+.muted{
+  color:var(--muted);
+  font-size:14px;
+  margin-top:5px;
+  line-height:1.3;
+  overflow-wrap:anywhere;
+}
+.value{
+  font-weight:800;
+  white-space:nowrap;
+  font-size:18px;
+  text-align:right;
+  max-width:150px;
+}
+.progress{
+  height:10px;
+  background:#181a1d;
+  border-radius:10px;
+  margin-top:12px;
+  overflow:hidden;
+}
+.progress span{
+  display:block;
+  height:100%;
+  background:linear-gradient(90deg,#007900,#00a126);
+  border-radius:10px;
+}
+button{
+  border:0;
+  border-radius:14px;
+  padding:13px 16px;
+  font-weight:700;
+  font-size:15px;
+  cursor:pointer;
+}
+.btn-primary{background:var(--azul);color:white}
+.btn-danger{background:var(--vermelho);color:white}
+.btn-secondary{background:#3a3d43;color:white}
+.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}
+label{display:block;font-weight:700;margin:12px 0 6px}
+input,select{
+  width:100%;
+  padding:13px;
+  border:1px solid #50545d;
+  border-radius:12px;
+  font-size:16px;
+  background:#25272b;
+  color:white;
+}
+.bottom{
+  position:fixed;
+  left:0;right:0;bottom:0;
+  background:#191919;
+  padding:10px 10px calc(10px + env(safe-area-inset-bottom));
+  display:grid;
+  grid-template-columns:repeat(5,minmax(0,1fr));
+  gap:6px;
+  box-shadow:0 -8px 22px rgba(0,0,0,.35);
+  z-index:20;
+}
+.navbtn{
+  background:#4a5058;
+  padding:11px 2px;
+  border-radius:18px;
+  font-size:12px;
+  color:white;
+  min-width:0;
+}
+.navbtn.active{background:#07517b;color:white}
+.back{margin-bottom:12px;background:#3b4047;color:white}
+.empty{padding:18px;text-align:center;color:var(--muted)}
+.badge{
+  display:inline-block;
+  background:#183f55;
+  color:#bde8ff;
+  padding:5px 9px;
+  border-radius:999px;
+  font-size:12px;
+  font-weight:700;
+}
+.hidden{display:none}
+.status-ok{color:#66e38c}
+.status-alerta{color:#ffd166}
+.status-estourado{color:#ff6b6b}
+#mensagemPlanejamento{
+  background:#173d2b;
+  border-color:#2f8f62;
+}
+#mensagemPlanejamento.alerta{
+  background:#4a3817;
+  border-color:#b78a26;
+}
+#mensagemPlanejamento.estourado{
+  background:#4c1f23;
+  border-color:#a94c55;
+}
+#restanteAtual,#disponivelFechamento,#disponivelDia{
+  color:#82e6a5;
+}
+
+
+#relatorioFaturas .list-item{
+  padding:20px 22px;
+  border-radius:24px;
+}
+#relatorioFaturas .title{
+  font-size:20px;
+  color:#d7eaff;
+}
+#relatorioFaturas .value{
+  font-size:24px;
+  color:#d7eaff;
+}
+#relatorioCategoriasPeriodo .list-item{
+  border:none;
+  background:transparent;
+  border-radius:0;
+  padding:10px 0 14px;
   margin:0;
 }
-.categoria-card-acoes .editar{
-  background:#0f2f4a;
+#relatorioCategoriasPeriodo .list-item+.list-item{
+  border-top:1px solid rgba(255,255,255,.04);
 }
-.categoria-card-acoes .excluir{
-  background:#b91c1c;
+
+@media(max-width:430px){
+  header h1{font-size:31px}
+  header p{font-size:17px}
+  main{padding:14px}
+  .card{padding:20px;border-radius:26px}
+  .card h2{font-size:27px}
+  .row{grid-template-columns:minmax(0,1fr) auto;gap:8px}
+  .title{font-size:16px}
+  .value{font-size:16px;max-width:118px}
+  #relatorioFaturas .title{font-size:18px}
+  #relatorioFaturas .value{font-size:21px;max-width:135px}
+  .summary-grid{grid-template-columns:1fr 1fr}
+  .summary b{font-size:18px}
 }
-.categoria-edicao{
-  margin-top:12px;
-  padding-top:12px;
-  border-top:1px solid #e5e7eb;
+
+/* V3.5 — Correção definitiva para textos longos */
+.list-item{
+  overflow:visible;
 }
-.categoria-edicao-acoes{
+
+.list-item .row{
   display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:8px;
-  margin-top:8px;
+  grid-template-columns:minmax(0,1fr) max-content;
+  align-items:start;
+  column-gap:14px;
+  row-gap:8px;
 }
-@media(min-width:700px){
-  .categorias-cards{
-    grid-template-columns:repeat(2,1fr);
+
+.list-item .row > div:first-child{
+  min-width:0;
+  max-width:100%;
+}
+
+.list-item .title{
+  white-space:normal;
+  overflow-wrap:normal;
+  word-break:normal;
+  hyphens:none;
+  line-height:1.35;
+}
+
+.list-item .muted{
+  white-space:normal;
+  overflow-wrap:normal;
+  word-break:normal;
+  line-height:1.4;
+}
+
+.list-item .value{
+  justify-self:end;
+  align-self:start;
+  white-space:nowrap;
+  max-width:none;
+  min-width:max-content;
+  text-align:right;
+  padding-left:4px;
+}
+
+#categoriasAtual .list-item,
+#relatorioCategoriasPeriodo .list-item{
+  padding:18px;
+}
+
+#categoriasAtual .title,
+#relatorioCategoriasPeriodo .title{
+  font-size:16px;
+  letter-spacing:.1px;
+}
+
+#categoriasAtual .muted,
+#relatorioCategoriasPeriodo .muted{
+  margin-top:7px;
+}
+
+#categoriasAtual .progress,
+#relatorioCategoriasPeriodo .progress{
+  grid-column:1 / -1;
+  width:100%;
+}
+
+@media(max-width:520px){
+  #categoriasAtual .row,
+  #relatorioCategoriasPeriodo .row{
+    grid-template-columns:1fr;
+  }
+
+  #categoriasAtual .value,
+  #relatorioCategoriasPeriodo .value{
+    justify-self:start;
+    margin-top:3px;
+    font-size:20px;
+  }
+
+  #categoriasAtual .title,
+  #relatorioCategoriasPeriodo .title{
+    font-size:17px;
+  }
+
+  #categoriasAtual .muted,
+  #relatorioCategoriasPeriodo .muted{
+    font-size:13px;
+  }
+
+  #relatorioFaturas .row,
+  #proximasFaturas .row{
+    grid-template-columns:minmax(0,1fr) auto;
+  }
+
+  #relatorioFaturas .value,
+  #proximasFaturas .value{
+    font-size:19px;
   }
 }
+
+@media(max-width:370px){
+  #relatorioFaturas .row,
+  #proximasFaturas .row{
+    grid-template-columns:1fr;
+  }
+
+  #relatorioFaturas .value,
+  #proximasFaturas .value{
+    justify-self:start;
+  }
+}
+
+
+/* V3.6 — filtros de gastos */
+.category-filter-bar{display:flex;gap:8px;margin:14px 0 16px;padding:5px;border:1px solid var(--border);border-radius:14px;background:rgba(255,255,255,.03)}
+.category-filter-btn{flex:1;border:0;border-radius:10px;padding:10px 6px;font-weight:800;font-size:13px;color:var(--muted);background:transparent}
+.category-filter-btn.active{background:var(--primary);color:#fff}
+.expense-status{display:inline-block;margin-top:7px;padding:5px 9px;border-radius:999px;font-size:12px;font-weight:800}
+.expense-status.posted{color:#8ef09a;background:rgba(0,180,70,.12);border:1px solid rgba(0,180,70,.26)}
+.expense-status.scheduled{color:#ffd166;background:rgba(255,193,7,.12);border:1px solid rgba(255,193,7,.25)}
+.category-summary{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-bottom:14px}
+.category-summary .summary-box{padding:12px;border:1px solid var(--border);border-radius:12px;background:rgba(255,255,255,.025)}
+.category-summary .summary-label{font-size:11px;color:var(--muted);margin-bottom:4px}
+.category-summary .summary-value{font-size:15px;font-weight:800;white-space:nowrap}
+@media(max-width:440px){.category-filter-btn{font-size:12px}.category-summary{grid-template-columns:1fr}}
 
 </style>
 </head>
 <body>
-<header>
-<h1>💳 Fatura Fácil</h1>
-<p id="subtitulo">Controle sua fatura antes que ela controle você</p>
-</header>
-
+<header><h1>💳 Fatura Fácil</h1><p>Controle sua fatura de 13 a 13</p></header>
 <main>
-<section id="inicio" class="tela ativa">
-<div class="card">
-<span class="badge">V2.6 Teste</span>
-<h2>Dashboard</h2>
-<label>Data dentro da fatura</label>
-<input type="date" id="dataFiltro">
-<p id="periodo" class="info"></p>
-<p>Fatura atual</p>
-<div class="valor" id="totalFatura">R$ 0,00</div>
-<div class="barra-bg"><div class="barra" id="barraTotal"></div></div>
-<p id="usoTotalTexto" class="info">0% do orçamento total</p>
-<div class="kpi">
-<div><span>Planejado</span><b id="planejadoTotal">R$ 0,00</b></div>
-<div><span>Restante</span><b id="saldoTotal">R$ 0,00</b></div>
-<div><span>Dias até fechamento</span><b id="diasFechamento">0 dias</b></div>
-<div><span>Pode gastar por dia</span><b id="porDia">R$ 0,00</b></div>
-</div>
-<div id="alertas"></div>
-</div>
-
-<div class="card">
-<h2>Saúde financeira</h2>
-<div class="saude" id="pontuacaoSaude">100</div>
-<p id="textoSaude" class="info">Excelente controle.</p>
-</div>
-
-<div class="card">
-<h2>Resumo por categoria</h2>
-<p class="info">A coluna Categoria fica fixa. Deslize somente os valores para o lado.</p>
-
-<div class="resumo-split">
-  <div class="resumo-fixo">
-    <div class="resumo-cabecalho categoria-cabecalho">Categoria 📌</div>
-    <div id="resumoCategoriasFixas"></div>
-  </div>
-
-  <div class="resumo-valores-scroll">
-    <div class="resumo-valores">
-      <div class="resumo-cabecalho">Gasto</div>
-      <div class="resumo-cabecalho">Planejado</div>
-      <div class="resumo-cabecalho">Falta gastar</div>
-      <div class="resumo-cabecalho">Uso</div>
-      <div id="resumoCategoriasValores" class="resumo-valores-corpo"></div>
+<section id="inicio" class="section active">
+  <div class="card">
+    <h2>Resumo da fatura atual</h2>
+    <div class="summary-grid">
+      <div class="summary">
+        <small>Período</small>
+        <b id="periodoAtual"></b>
+      </div>
+      <div class="summary">
+        <small>Total gasto</small>
+        <b id="totalAtual"></b>
+      </div>
+      <div class="summary">
+        <small>Orçamento planejado</small>
+        <b id="orcamentoAtual"></b>
+      </div>
+      <div class="summary">
+        <small>Ainda pode gastar</small>
+        <b id="restanteAtual"></b>
+      </div>
+    </div>
+    <div class="progress" style="margin-top:18px;height:14px">
+      <span id="progressoOrcamento" style="width:0%"></span>
+    </div>
+    <div class="row" style="margin-top:12px">
+      <div>
+        <div class="title" id="statusOrcamento"></div>
+        <div class="muted" id="percentualOrcamento"></div>
+      </div>
+      <div class="value" id="diasRestantes"></div>
     </div>
   </div>
-</div>
-</div>
+
+  <div class="card">
+    <h2>Quanto ainda pode gastar</h2>
+    <div class="summary-grid">
+      <div class="summary">
+        <small>Disponível até o fechamento</small>
+        <b id="disponivelFechamento"></b>
+      </div>
+      <div class="summary">
+        <small>Média disponível por dia</small>
+        <b id="disponivelDia"></b>
+      </div>
+    </div>
+    <div id="mensagemPlanejamento" class="list-item" style="margin-top:16px"></div>
+  </div>
+
+  <div class="card">
+    <h2>Gastos por categoria</h2>
+    <div id="categoriasAtual"></div>
+  </div>
+
+  <div class="card">
+    <h2>Próximas faturas</h2>
+    <div class="muted">Toque em uma fatura para ver categorias, compras e detalhes.</div>
+    <div id="proximasFaturas"></div>
+  </div>
 </section>
 
-<section id="gasto" class="tela">
-<div class="card">
-<h2>Novo gasto</h2>
-<div class="form2">
-<div><label>Data da compra</label><input type="date" id="dataGasto"></div>
-<div><label>Valor total R$</label><input type="number" id="valor" step="0.01" placeholder="0,00"></div>
-</div>
-<label>Descrição</label><input id="descricao" placeholder="Ex: Mercado Atacadão">
-<label>Categoria</label><select id="categoria"></select>
-<label>Quantidade de parcelas</label><select id="parcelas"></select>
-<p class="info">Se for 1x, entra somente na fatura atual. Se for parcelado, gera automaticamente nas próximas faturas.</p>
-<button onclick="adicionarGasto()">Adicionar gasto</button>
-</div>
-
-<div class="card">
-<h2>Posso comprar?</h2>
-<div class="form2">
-<div><label>Valor da compra</label><input type="number" id="valorSimular" step="0.01"></div>
-<div><label>Categoria</label><select id="categoriaSimular"></select></div>
-</div>
-<label>Parcelas</label><select id="parcelasSimular"></select>
-<button class="sec" onclick="simular()">Simular</button>
-<div id="resultadoSimulacao"></div>
-</div>
+<section id="gasto" class="section">
+  <div class="card"><h2>Novo gasto</h2>
+    <label>Data</label><input id="fData" type="date">
+    <label>Descrição</label><input id="fDesc" type="text">
+    <label>Categoria</label><select id="fCat"></select>
+    <label>Valor</label><input id="fValor" type="number" step="0.01">
+    <label>Parcelas</label><input id="fParcelas" type="number" min="1" value="1">
+    <div class="actions"><button class="btn-primary" onclick="adicionarGasto()">Salvar gasto</button></div>
+  </div>
 </section>
 
-<section id="relatorios" class="tela">
-<div class="card">
-<h2>Gastos por categoria</h2>
-<div id="graficoCategorias"></div>
-</div>
-<div class="card">
-<h2>Próximas faturas</h2>
-<p class="info">Período e valor previsto aparecem juntos para facilitar a visualização no celular.</p>
-<div id="proximasFaturas"></div>
-</div>
+<section id="relatorio" class="section">
+  <div class="card">
+    <h2>Gastos por categoria</h2>
+    <div id="relatorioCategoriasPeriodo"></div>
+  </div>
+  <div class="card">
+    <h2>Próximas faturas</h2>
+    <div class="muted">Período e valor previsto aparecem juntos para facilitar a visualização no celular.</div>
+    <div id="relatorioFaturas"></div>
+  </div>
 </section>
 
-<section id="historico" class="tela">
-<div class="card">
-<h2>Histórico da fatura</h2>
-<label>Pesquisar</label><input id="pesquisa" oninput="atualizarTudo()" placeholder="Buscar gasto">
-<table>
-<thead><tr><th>Data</th><th>Descrição</th><th>Categoria</th><th>Parcela</th><th>Valor</th><th></th></tr></thead>
-<tbody id="listaGastos"></tbody>
-</table>
-</div>
-<div class="card">
-<h2>Parcelados ativos</h2>
-<table><thead><tr><th>Compra</th><th>Total</th><th>Parcelas</th><th>Restam</th><th>Saldo futuro</th></tr></thead><tbody id="listaParcelados"></tbody></table>
-</div>
-<div class="card">
-<button onclick="exportarCSV()">Exportar CSV</button>
-<br><br><button class="danger" onclick="apagarGastos()">Apagar gastos</button>
-</div>
+<section id="historico" class="section">
+  <div class="card"><h2>Histórico</h2><input id="busca" placeholder="Pesquisar..." oninput="renderHistorico()"><div id="historicoLista"></div></div>
 </section>
 
-<section id="config" class="tela">
-<div class="card">
-<h2>Categorias</h2>
-
-<div class="form2">
-<div>
-<label>Nome</label>
-<input id="novaCategoria" placeholder="Ex: Farmácia">
-</div>
-<div>
-<label>Planejado R$</label>
-<input type="number" id="novoPlanejado" step="0.01">
-</div>
-</div>
-
-<button onclick="adicionarCategoria()">Adicionar categoria</button>
-
-<label style="margin-top:16px">Pesquisar categoria</label>
-<input id="pesquisaCategorias" placeholder="Digite o nome da categoria" oninput="atualizarCategoriasCards()">
-
-<div id="listaCategoriasCards" class="categorias-cards"></div>
-</div>
-
-<div class="card">
-<h2>Configurações da fatura</h2>
-<label>Dia de fechamento</label><select id="diaFechamento"></select>
-<button onclick="salvarConfig()">Salvar configuração</button>
-<div id="msgConfig"></div>
-</div>
-
-<div class="card">
-<h2>Backup</h2>
-<button onclick="baixarBackup()">Baixar backup</button>
-<label>Restaurar backup</label><input type="file" id="arquivoBackup" accept=".json" onchange="restaurarBackup(event)">
-</div>
+<section id="configuracoes" class="section">
+  <div class="card"><h2>Configurações</h2>
+    <label>Dia de fechamento</label><input id="diaFechamento" type="number" min="1" max="28">
+    <div class="actions">
+      <button class="btn-primary" onclick="salvarConfig()">Salvar</button>
+      <button class="btn-secondary" onclick="baixarBackup()">Baixar backup</button>
+      <button class="btn-secondary" onclick="document.getElementById('arquivoBackup').click()">Restaurar backup</button>
+      <input id="arquivoBackup" class="hidden" type="file" accept=".json" onchange="restaurarBackup(event)">
+    </div>
+    <p class="muted">V3.6 — Gastos futuros por categoria — 76 lançamentos migrados.</p>
+  </div>
 </section>
+
+<section id="detalhe" class="section"><div id="detalheConteudo"></div></section>
 </main>
 
-<div class="nav">
-<button id="btn-inicio" class="ativo" onclick="abrir('inicio')">🏠<br>Início</button>
-<button id="btn-gasto" onclick="abrir('gasto')">➕<br>Gasto</button>
-<button id="btn-relatorios" onclick="abrir('relatorios')">📊<br>Relat.</button>
-<button id="btn-historico" onclick="abrir('historico')">📋<br>Hist.</button>
-<button id="btn-config" onclick="abrir('config')">⚙️<br>Config.</button>
-</div>
+<nav class="bottom">
+<button class="navbtn active" data-sec="inicio" onclick="mostrarSecao('inicio',this)">🏠<br>Início</button>
+<button class="navbtn" data-sec="gasto" onclick="mostrarSecao('gasto',this)">➕<br>Gasto</button>
+<button class="navbtn" data-sec="relatorio" onclick="mostrarSecao('relatorio',this)">📊<br>Relat.</button>
+<button class="navbtn" data-sec="historico" onclick="mostrarSecao('historico',this)">📋<br>Hist.</button>
+<button class="navbtn" data-sec="configuracoes" onclick="mostrarSecao('configuracoes',this)">⚙️<br>Config.</button>
+</nav>
 
 <script>
-let categorias=JSON.parse(localStorage.getItem("ff_cat"))||[{nome:"Mercado",planejado:1200},{nome:"Alimentação",planejado:600},{nome:"Combustível",planejado:600},{nome:"Farmácia",planejado:250},{nome:"Casa",planejado:400},{nome:"Lazer",planejado:300},{nome:"Outros",planejado:300}];
-let gastos=JSON.parse(localStorage.getItem("ff_gastos"))||[];
-let config=JSON.parse(localStorage.getItem("ff_config"))||{diaFechamento:13};
+const PADRAO={"categorias": [{"nome": "MERCADO/DESPESAS/SACOLÃO", "planejado": 2000}, {"nome": "LAZER ( Gastos fora de casa )", "planejado": 1000}, {"nome": "COMBUSTÍVEL", "planejado": 1000}, {"nome": "ROUPAS E ACESSORIOS", "planejado": 350}, {"nome": "ALMOÇO FORA EMPRESA", "planejado": 400}, {"nome": "DELIVERY", "planejado": 800}, {"nome": "OUTROS", "planejado": 2000}], "gastos": [{"data": "2026-07-14", "descricao": "Academia Bluefit", "categoria": "OUTROS", "valor": 123.25, "parcelado": true, "parcelaAtual": 1, "totalParcelas": 12, "valorTotal": 1479, "grupoId": "p1783946356002"}, {"data": "2026-08-14", "descricao": "Academia Bluefit", "categoria": "OUTROS", "valor": 123.25, "parcelado": true, "parcelaAtual": 2, "totalParcelas": 12, "valorTotal": 1479, "grupoId": "p1783946356002"}, {"data": "2026-09-14", "descricao": "Academia Bluefit", "categoria": "OUTROS", "valor": 123.25, "parcelado": true, "parcelaAtual": 3, "totalParcelas": 12, "valorTotal": 1479, "grupoId": "p1783946356002"}, {"data": "2026-10-14", "descricao": "Academia Bluefit", "categoria": "OUTROS", "valor": 123.25, "parcelado": true, "parcelaAtual": 4, "totalParcelas": 12, "valorTotal": 1479, "grupoId": "p1783946356002"}, {"data": "2026-11-14", "descricao": "Academia Bluefit", "categoria": "OUTROS", "valor": 123.25, "parcelado": true, "parcelaAtual": 5, "totalParcelas": 12, "valorTotal": 1479, "grupoId": "p1783946356002"}, {"data": "2026-12-14", "descricao": "Academia Bluefit", "categoria": "OUTROS", "valor": 123.25, "parcelado": true, "parcelaAtual": 6, "totalParcelas": 12, "valorTotal": 1479, "grupoId": "p1783946356002"}, {"data": "2027-01-14", "descricao": "Academia Bluefit", "categoria": "OUTROS", "valor": 123.25, "parcelado": true, "parcelaAtual": 7, "totalParcelas": 12, "valorTotal": 1479, "grupoId": "p1783946356002"}, {"data": "2027-02-14", "descricao": "Academia Bluefit", "categoria": "OUTROS", "valor": 123.25, "parcelado": true, "parcelaAtual": 8, "totalParcelas": 12, "valorTotal": 1479, "grupoId": "p1783946356002"}, {"data": "2027-03-14", "descricao": "Academia Bluefit", "categoria": "OUTROS", "valor": 123.25, "parcelado": true, "parcelaAtual": 9, "totalParcelas": 12, "valorTotal": 1479, "grupoId": "p1783946356002"}, {"data": "2027-04-14", "descricao": "Academia Bluefit", "categoria": "OUTROS", "valor": 123.25, "parcelado": true, "parcelaAtual": 10, "totalParcelas": 12, "valorTotal": 1479, "grupoId": "p1783946356002"}, {"data": "2027-05-14", "descricao": "Academia Bluefit", "categoria": "OUTROS", "valor": 123.25, "parcelado": true, "parcelaAtual": 11, "totalParcelas": 12, "valorTotal": 1479, "grupoId": "p1783946356002"}, {"data": "2027-06-14", "descricao": "Academia Bluefit", "categoria": "OUTROS", "valor": 123.25, "parcelado": true, "parcelaAtual": 12, "totalParcelas": 12, "valorTotal": 1479, "grupoId": "p1783946356002"}, {"data": "2026-07-14", "descricao": "Spotify  12 meses", "categoria": "OUTROS", "valor": 25, "parcelado": true, "parcelaAtual": 1, "totalParcelas": 12, "valorTotal": 300, "grupoId": "p1783946573709"}, {"data": "2026-08-14", "descricao": "Spotify  12 meses", "categoria": "OUTROS", "valor": 25, "parcelado": true, "parcelaAtual": 2, "totalParcelas": 12, "valorTotal": 300, "grupoId": "p1783946573709"}, {"data": "2026-09-14", "descricao": "Spotify  12 meses", "categoria": "OUTROS", "valor": 25, "parcelado": true, "parcelaAtual": 3, "totalParcelas": 12, "valorTotal": 300, "grupoId": "p1783946573709"}, {"data": "2026-10-14", "descricao": "Spotify  12 meses", "categoria": "OUTROS", "valor": 25, "parcelado": true, "parcelaAtual": 4, "totalParcelas": 12, "valorTotal": 300, "grupoId": "p1783946573709"}, {"data": "2026-11-14", "descricao": "Spotify  12 meses", "categoria": "OUTROS", "valor": 25, "parcelado": true, "parcelaAtual": 5, "totalParcelas": 12, "valorTotal": 300, "grupoId": "p1783946573709"}, {"data": "2026-12-14", "descricao": "Spotify  12 meses", "categoria": "OUTROS", "valor": 25, "parcelado": true, "parcelaAtual": 6, "totalParcelas": 12, "valorTotal": 300, "grupoId": "p1783946573709"}, {"data": "2027-01-14", "descricao": "Spotify  12 meses", "categoria": "OUTROS", "valor": 25, "parcelado": true, "parcelaAtual": 7, "totalParcelas": 12, "valorTotal": 300, "grupoId": "p1783946573709"}, {"data": "2027-02-14", "descricao": "Spotify  12 meses", "categoria": "OUTROS", "valor": 25, "parcelado": true, "parcelaAtual": 8, "totalParcelas": 12, "valorTotal": 300, "grupoId": "p1783946573709"}, {"data": "2027-03-14", "descricao": "Spotify  12 meses", "categoria": "OUTROS", "valor": 25, "parcelado": true, "parcelaAtual": 9, "totalParcelas": 12, "valorTotal": 300, "grupoId": "p1783946573709"}, {"data": "2027-04-14", "descricao": "Spotify  12 meses", "categoria": "OUTROS", "valor": 25, "parcelado": true, "parcelaAtual": 10, "totalParcelas": 12, "valorTotal": 300, "grupoId": "p1783946573709"}, {"data": "2027-05-14", "descricao": "Spotify  12 meses", "categoria": "OUTROS", "valor": 25, "parcelado": true, "parcelaAtual": 11, "totalParcelas": 12, "valorTotal": 300, "grupoId": "p1783946573709"}, {"data": "2027-06-14", "descricao": "Spotify  12 meses", "categoria": "OUTROS", "valor": 25, "parcelado": true, "parcelaAtual": 12, "totalParcelas": 12, "valorTotal": 300, "grupoId": "p1783946573709"}, {"data": "2026-07-14", "descricao": "You tube 12 meses", "categoria": "OUTROS", "valor": 54, "parcelado": true, "parcelaAtual": 1, "totalParcelas": 12, "valorTotal": 648, "grupoId": "p1783946624001"}, {"data": "2026-08-14", "descricao": "You tube 12 meses", "categoria": "OUTROS", "valor": 54, "parcelado": true, "parcelaAtual": 2, "totalParcelas": 12, "valorTotal": 648, "grupoId": "p1783946624001"}, {"data": "2026-09-14", "descricao": "You tube 12 meses", "categoria": "OUTROS", "valor": 54, "parcelado": true, "parcelaAtual": 3, "totalParcelas": 12, "valorTotal": 648, "grupoId": "p1783946624001"}, {"data": "2026-10-14", "descricao": "You tube 12 meses", "categoria": "OUTROS", "valor": 54, "parcelado": true, "parcelaAtual": 4, "totalParcelas": 12, "valorTotal": 648, "grupoId": "p1783946624001"}, {"data": "2026-11-14", "descricao": "You tube 12 meses", "categoria": "OUTROS", "valor": 54, "parcelado": true, "parcelaAtual": 5, "totalParcelas": 12, "valorTotal": 648, "grupoId": "p1783946624001"}, {"data": "2026-12-14", "descricao": "You tube 12 meses", "categoria": "OUTROS", "valor": 54, "parcelado": true, "parcelaAtual": 6, "totalParcelas": 12, "valorTotal": 648, "grupoId": "p1783946624001"}, {"data": "2027-01-14", "descricao": "You tube 12 meses", "categoria": "OUTROS", "valor": 54, "parcelado": true, "parcelaAtual": 7, "totalParcelas": 12, "valorTotal": 648, "grupoId": "p1783946624001"}, {"data": "2027-02-14", "descricao": "You tube 12 meses", "categoria": "OUTROS", "valor": 54, "parcelado": true, "parcelaAtual": 8, "totalParcelas": 12, "valorTotal": 648, "grupoId": "p1783946624001"}, {"data": "2027-03-14", "descricao": "You tube 12 meses", "categoria": "OUTROS", "valor": 54, "parcelado": true, "parcelaAtual": 9, "totalParcelas": 12, "valorTotal": 648, "grupoId": "p1783946624001"}, {"data": "2027-04-14", "descricao": "You tube 12 meses", "categoria": "OUTROS", "valor": 54, "parcelado": true, "parcelaAtual": 10, "totalParcelas": 12, "valorTotal": 648, "grupoId": "p1783946624001"}, {"data": "2027-05-14", "descricao": "You tube 12 meses", "categoria": "OUTROS", "valor": 54, "parcelado": true, "parcelaAtual": 11, "totalParcelas": 12, "valorTotal": 648, "grupoId": "p1783946624001"}, {"data": "2027-06-14", "descricao": "You tube 12 meses", "categoria": "OUTROS", "valor": 54, "parcelado": true, "parcelaAtual": 12, "totalParcelas": 12, "valorTotal": 648, "grupoId": "p1783946624001"}, {"data": "2026-07-14", "descricao": "Meli +  12 meses", "categoria": "OUTROS", "valor": 20, "parcelado": true, "parcelaAtual": 1, "totalParcelas": 12, "valorTotal": 240, "grupoId": "p1783946742687"}, {"data": "2026-08-14", "descricao": "Meli +  12 meses", "categoria": "OUTROS", "valor": 20, "parcelado": true, "parcelaAtual": 2, "totalParcelas": 12, "valorTotal": 240, "grupoId": "p1783946742687"}, {"data": "2026-09-14", "descricao": "Meli +  12 meses", "categoria": "OUTROS", "valor": 20, "parcelado": true, "parcelaAtual": 3, "totalParcelas": 12, "valorTotal": 240, "grupoId": "p1783946742687"}, {"data": "2026-10-14", "descricao": "Meli +  12 meses", "categoria": "OUTROS", "valor": 20, "parcelado": true, "parcelaAtual": 4, "totalParcelas": 12, "valorTotal": 240, "grupoId": "p1783946742687"}, {"data": "2026-11-14", "descricao": "Meli +  12 meses", "categoria": "OUTROS", "valor": 20, "parcelado": true, "parcelaAtual": 5, "totalParcelas": 12, "valorTotal": 240, "grupoId": "p1783946742687"}, {"data": "2026-12-14", "descricao": "Meli +  12 meses", "categoria": "OUTROS", "valor": 20, "parcelado": true, "parcelaAtual": 6, "totalParcelas": 12, "valorTotal": 240, "grupoId": "p1783946742687"}, {"data": "2027-01-14", "descricao": "Meli +  12 meses", "categoria": "OUTROS", "valor": 20, "parcelado": true, "parcelaAtual": 7, "totalParcelas": 12, "valorTotal": 240, "grupoId": "p1783946742687"}, {"data": "2027-02-14", "descricao": "Meli +  12 meses", "categoria": "OUTROS", "valor": 20, "parcelado": true, "parcelaAtual": 8, "totalParcelas": 12, "valorTotal": 240, "grupoId": "p1783946742687"}, {"data": "2027-03-14", "descricao": "Meli +  12 meses", "categoria": "OUTROS", "valor": 20, "parcelado": true, "parcelaAtual": 9, "totalParcelas": 12, "valorTotal": 240, "grupoId": "p1783946742687"}, {"data": "2027-04-14", "descricao": "Meli +  12 meses", "categoria": "OUTROS", "valor": 20, "parcelado": true, "parcelaAtual": 10, "totalParcelas": 12, "valorTotal": 240, "grupoId": "p1783946742687"}, {"data": "2027-05-14", "descricao": "Meli +  12 meses", "categoria": "OUTROS", "valor": 20, "parcelado": true, "parcelaAtual": 11, "totalParcelas": 12, "valorTotal": 240, "grupoId": "p1783946742687"}, {"data": "2027-06-14", "descricao": "Meli +  12 meses", "categoria": "OUTROS", "valor": 20, "parcelado": true, "parcelaAtual": 12, "totalParcelas": 12, "valorTotal": 240, "grupoId": "p1783946742687"}, {"data": "2026-07-14", "descricao": "PIX PARA Cátia 2x 220", "categoria": "OUTROS", "valor": 220, "parcelado": true, "parcelaAtual": 1, "totalParcelas": 2, "valorTotal": 440, "grupoId": "p1783956024907"}, {"data": "2026-08-14", "descricao": "PIX PARA Cátia 2x 220", "categoria": "OUTROS", "valor": 220, "parcelado": true, "parcelaAtual": 2, "totalParcelas": 2, "valorTotal": 440, "grupoId": "p1783956024907"}, {"data": "2026-07-14", "descricao": "Bem barato", "categoria": "MERCADO/DESPESAS/SACOLÃO", "valor": 905, "parcelado": false, "parcelaAtual": 1, "totalParcelas": 1, "valorTotal": 905, "grupoId": "p1783982330668"}, {"data": "2026-07-14", "descricao": "Posto Shel próximo ao Paço de Sbc", "categoria": "COMBUSTÍVEL", "valor": 277, "parcelado": false, "parcelaAtual": 1, "totalParcelas": 1, "valorTotal": 277, "grupoId": "p1784034831253"}, {"data": "2026-07-14", "descricao": "MERCADO LIVRE - Tinta José Henrique", "categoria": "OUTROS", "valor": 38, "parcelado": false, "parcelaAtual": 1, "totalParcelas": 1, "valorTotal": 38, "grupoId": "p1784037268684"}, {"data": "2026-07-14", "descricao": "MERCADO livre = carrinho Lego presente Joca", "categoria": "OUTROS", "valor": 59, "parcelado": false, "parcelaAtual": 1, "totalParcelas": 1, "valorTotal": 59, "grupoId": "p1784041626971"}, {"data": "2026-07-14", "descricao": "DAFITI = CAMISA POLO", "categoria": "ROUPAS E ACESSORIOS", "valor": 159, "parcelado": false, "parcelaAtual": 1, "totalParcelas": 1, "valorTotal": 159, "grupoId": "p1784043433623"}, {"data": "2026-07-14", "descricao": "C&A = calça e caneta", "categoria": "ROUPAS E ACESSORIOS", "valor": 110, "parcelado": true, "parcelaAtual": 1, "totalParcelas": 2, "valorTotal": 220, "grupoId": "p1784045020492"}, {"data": "2026-08-14", "descricao": "C&A = calça e caneta", "categoria": "ROUPAS E ACESSORIOS", "valor": 110, "parcelado": true, "parcelaAtual": 2, "totalParcelas": 2, "valorTotal": 220, "grupoId": "p1784045020492"}, {"data": "2026-07-14", "descricao": "Mercado livre = ESPUMA DE BANHO", "categoria": "OUTROS", "valor": 36, "parcelado": false, "parcelaAtual": 1, "totalParcelas": 1, "valorTotal": 36, "grupoId": "p1784072940357"}, {"data": "2026-07-15", "descricao": "Pix na conta Bradesco", "categoria": "OUTROS", "valor": 134, "parcelado": false, "parcelaAtual": 1, "totalParcelas": 1, "valorTotal": 134, "grupoId": "p1784110168310"}, {"data": "2026-07-16", "descricao": "Mercado Coop", "categoria": "MERCADO/DESPESAS/SACOLÃO", "valor": 486, "parcelado": false, "parcelaAtual": 1, "totalParcelas": 1, "valorTotal": 486, "grupoId": "p1784235921576"}, {"data": "2026-07-17", "descricao": "Remédio Ifood", "categoria": "DELIVERY", "valor": 58, "parcelado": false, "parcelaAtual": 1, "totalParcelas": 1, "valorTotal": 58, "grupoId": "p1784318211940"}, {"data": "2026-07-18", "descricao": "Pizzaria Aniversário Joca", "categoria": "LAZER ( Gastos fora de casa )", "valor": 199, "parcelado": false, "parcelaAtual": 1, "totalParcelas": 1, "valorTotal": 199, "grupoId": "p1784337970795"}, {"data": "2026-07-18", "descricao": "Familhao", "categoria": "OUTROS", "valor": 20, "parcelado": true, "parcelaAtual": 1, "totalParcelas": 12, "valorTotal": 240, "grupoId": "p1784375018809"}, {"data": "2026-08-18", "descricao": "Familhao", "categoria": "OUTROS", "valor": 20, "parcelado": true, "parcelaAtual": 2, "totalParcelas": 12, "valorTotal": 240, "grupoId": "p1784375018809"}, {"data": "2026-09-18", "descricao": "Familhao", "categoria": "OUTROS", "valor": 20, "parcelado": true, "parcelaAtual": 3, "totalParcelas": 12, "valorTotal": 240, "grupoId": "p1784375018809"}, {"data": "2026-10-18", "descricao": "Familhao", "categoria": "OUTROS", "valor": 20, "parcelado": true, "parcelaAtual": 4, "totalParcelas": 12, "valorTotal": 240, "grupoId": "p1784375018809"}, {"data": "2026-11-18", "descricao": "Familhao", "categoria": "OUTROS", "valor": 20, "parcelado": true, "parcelaAtual": 5, "totalParcelas": 12, "valorTotal": 240, "grupoId": "p1784375018809"}, {"data": "2026-12-18", "descricao": "Familhao", "categoria": "OUTROS", "valor": 20, "parcelado": true, "parcelaAtual": 6, "totalParcelas": 12, "valorTotal": 240, "grupoId": "p1784375018809"}, {"data": "2027-01-18", "descricao": "Familhao", "categoria": "OUTROS", "valor": 20, "parcelado": true, "parcelaAtual": 7, "totalParcelas": 12, "valorTotal": 240, "grupoId": "p1784375018809"}, {"data": "2027-02-18", "descricao": "Familhao", "categoria": "OUTROS", "valor": 20, "parcelado": true, "parcelaAtual": 8, "totalParcelas": 12, "valorTotal": 240, "grupoId": "p1784375018809"}, {"data": "2027-03-18", "descricao": "Familhao", "categoria": "OUTROS", "valor": 20, "parcelado": true, "parcelaAtual": 9, "totalParcelas": 12, "valorTotal": 240, "grupoId": "p1784375018809"}, {"data": "2027-04-18", "descricao": "Familhao", "categoria": "OUTROS", "valor": 20, "parcelado": true, "parcelaAtual": 10, "totalParcelas": 12, "valorTotal": 240, "grupoId": "p1784375018809"}, {"data": "2027-05-18", "descricao": "Familhao", "categoria": "OUTROS", "valor": 20, "parcelado": true, "parcelaAtual": 11, "totalParcelas": 12, "valorTotal": 240, "grupoId": "p1784375018809"}, {"data": "2027-06-18", "descricao": "Familhao", "categoria": "OUTROS", "valor": 20, "parcelado": true, "parcelaAtual": 12, "totalParcelas": 12, "valorTotal": 240, "grupoId": "p1784375018809"}, {"data": "2026-07-18", "descricao": "Gastos com Coca e Salgado  banca mo poli", "categoria": "LAZER ( Gastos fora de casa )", "valor": 19, "parcelado": false, "parcelaAtual": 1, "totalParcelas": 1, "valorTotal": 19, "grupoId": "p1784392770447"}, {"data": "2026-07-18", "descricao": "Mercado Da hora", "categoria": "MERCADO/DESPESAS/SACOLÃO", "valor": 87, "parcelado": false, "parcelaAtual": 1, "totalParcelas": 1, "valorTotal": 87, "grupoId": "p1784408418244"}], "config": {"diaFechamento": 13}};
+const clone=o=>JSON.parse(JSON.stringify(o));
+function ler(chave,padrao){try{const v=localStorage.getItem(chave);return v?JSON.parse(v):clone(padrao)}catch(e){return clone(padrao)}}
+let categorias=ler("ff_cat",PADRAO.categorias);
+let gastos=ler("ff_gastos",PADRAO.gastos);
+let config=ler("ff_config",PADRAO.config);
+function salvarTudo(){localStorage.setItem("ff_cat",JSON.stringify(categorias));localStorage.setItem("ff_gastos",JSON.stringify(gastos));localStorage.setItem("ff_config",JSON.stringify(config))}
+if(!localStorage.getItem("ff_cat")||!localStorage.getItem("ff_gastos")||!localStorage.getItem("ff_config")) salvarTudo();
 
-document.getElementById("dataFiltro").valueAsDate=new Date();
-document.getElementById("dataGasto").valueAsDate=new Date();
+const moeda=v=>Number(v||0).toLocaleString("pt-BR",{style:"currency",currency:"BRL"});
+const dataBR=s=>new Date(s+"T00:00:00").toLocaleDateString("pt-BR");
+const iso=d=>d.toISOString().slice(0,10);
 
-function iniciarDias(){let s=document.getElementById("diaFechamento");s.innerHTML="";for(let i=1;i<=31;i++){let o=document.createElement("option");o.value=i;o.textContent=String(i).padStart(2,"0");s.appendChild(o)}s.value=config.diaFechamento}
-function iniciarParcelas(){["parcelas","parcelasSimular"].forEach(id=>{let s=document.getElementById(id);s.innerHTML="";for(let i=1;i<=36;i++){let o=document.createElement("option");o.value=i;o.textContent=i+"x";s.appendChild(o)}})}
-function abrir(tela){document.querySelectorAll(".tela").forEach(x=>x.classList.remove("ativa"));document.getElementById(tela).classList.add("ativa");document.querySelectorAll(".nav button").forEach(x=>x.classList.remove("ativo"));document.getElementById("btn-"+tela).classList.add("ativo");atualizarTudo()}
-function salvar(){localStorage.setItem("ff_cat",JSON.stringify(categorias));localStorage.setItem("ff_gastos",JSON.stringify(gastos));localStorage.setItem("ff_config",JSON.stringify(config))}
-function salvarConfig(){config.diaFechamento=Number(document.getElementById("diaFechamento").value)||13;salvar();document.getElementById("msgConfig").innerHTML='<div class="alerta ok">✅ Configuração salva.</div>';atualizarTudo()}
-function moeda(v){return Number(v||0).toLocaleString("pt-BR",{style:"currency",currency:"BRL"})}
-function dataSegura(ano,mes,dia){let ult=new Date(ano,mes+1,0).getDate();return new Date(ano,mes,Math.min(dia,ult))}
-function periodo(dataBase){let dia=Number(config.diaFechamento||13);let d=new Date((dataBase||document.getElementById("dataFiltro").value)+"T00:00:00");let ini,fim;if(d.getDate()>=dia){ini=dataSegura(d.getFullYear(),d.getMonth(),dia);fim=dataSegura(d.getFullYear(),d.getMonth()+1,dia)}else{ini=dataSegura(d.getFullYear(),d.getMonth()-1,dia);fim=dataSegura(d.getFullYear(),d.getMonth(),dia)}return{ini,fim}}
-function adicionarMeses(dataISO, meses){let d=new Date(dataISO+"T00:00:00");return new Date(d.getFullYear(),d.getMonth()+meses,d.getDate()).toISOString().slice(0,10)}
-function gastosFatura(dataBase){let p=periodo(dataBase);return gastos.filter(g=>{let d=new Date(g.data+"T00:00:00");return d>=p.ini&&d<=p.fim})}
-function totalCat(){let o={};gastosFatura().forEach(g=>o[g.categoria]=(o[g.categoria]||0)+Number(g.valor));return o}
-function atualizarSelects(){["categoria","categoriaSimular"].forEach(id=>{let s=document.getElementById(id);let atual=s.value;s.innerHTML="";categorias.forEach(c=>{let o=document.createElement("option");o.value=c.nome;o.textContent=c.nome;s.appendChild(o)});if(categorias.some(c=>c.nome===atual))s.value=atual})}
-
-function adicionarGasto(){
-let data=document.getElementById("dataGasto").value,desc=document.getElementById("descricao").value.trim(),cat=document.getElementById("categoria").value,total=Number(document.getElementById("valor").value),qtd=Number(document.getElementById("parcelas").value)||1;
-if(!data||!desc||!cat||total<=0){alert("Preencha todos os campos.");return}
-let id="p"+Date.now();let valorParcela=Math.round((total/qtd)*100)/100;
-for(let i=1;i<=qtd;i++){let valor=i===qtd?Math.round((total-valorParcela*(qtd-1))*100)/100:valorParcela;gastos.push({data:adicionarMeses(data,i-1),descricao:desc,categoria:cat,valor:valor,parcelado:qtd>1,parcelaAtual:i,totalParcelas:qtd,valorTotal:total,grupoId:id})}
-salvar();document.getElementById("descricao").value="";document.getElementById("valor").value="";document.getElementById("parcelas").value="1";atualizarTudo();alert(qtd>1?"Compra parcelada gerada em "+qtd+"x.":"Gasto adicionado.")
+function periodoDaData(data){
+  const d=new Date(data+"T00:00:00"), fechamento=Number(config.diaFechamento||13);
+  let inicio;
+  if(d.getDate()>=fechamento) inicio=new Date(d.getFullYear(),d.getMonth(),fechamento);
+  else inicio=new Date(d.getFullYear(),d.getMonth()-1,fechamento);
+  const fim=new Date(inicio.getFullYear(),inicio.getMonth()+1,fechamento);
+  return {inicio,fim};
 }
-function adicionarCategoria(){let nome=document.getElementById("novaCategoria").value.trim(),pl=Number(document.getElementById("novoPlanejado").value)||0;if(!nome){alert("Digite o nome da categoria.");return}if(categorias.some(c=>c.nome.toLowerCase()===nome.toLowerCase())){alert("Categoria já existe.");return}categorias.push({nome,planejado:pl});salvar();document.getElementById("novaCategoria").value="";document.getElementById("novoPlanejado").value="";atualizarTudo()}
-function editarCategoria(i,campo,valor){if(campo==="nome"){let antigo=categorias[i].nome;if(!valor.trim()){atualizarTudo();return}categorias[i].nome=valor.trim();gastos.forEach(g=>{if(g.categoria===antigo)g.categoria=valor.trim()})}else{categorias[i].planejado=Number(valor)||0}salvar();atualizarTudo()}
-function excluirCategoria(i){let nome=categorias[i].nome;if(gastos.some(g=>g.categoria===nome)){alert("Categoria com gastos não pode ser excluída.");return}if(confirm("Excluir categoria?")){categorias.splice(i,1);salvar();atualizarTudo()}}
-function excluirGasto(i){if(confirm("Excluir este lançamento?")){gastos.splice(i,1);salvar();atualizarTudo()}}
+function hojePeriodo(){return periodoDaData(iso(new Date()))}
+function noPeriodo(g,p){
+  const d=new Date(g.data+"T00:00:00");
+  return d>=p.inicio&&d<=p.fim;
+}
+function gastosPeriodo(p){return gastos.filter(g=>noPeriodo(g,p))}
 
+function mostrarSecao(id,botao){
+  document.querySelectorAll(".section").forEach(s=>s.classList.remove("active"));
+  document.getElementById(id).classList.add("active");
+  document.querySelectorAll(".navbtn").forEach(b=>b.classList.remove("active"));
+  if(botao)botao.classList.add("active");
+  if(id==="inicio")renderInicio();
+  if(id==="historico")renderHistorico();
+  if(id==="relatorio")renderRelatorio();
+  if(id==="configuracoes")renderConfig();
+  window.scrollTo(0,0);
+}
 
-function atualizarCategoriasCards(){
-  const area=document.getElementById("listaCategoriasCards");
-  if(!area)return;
+function renderInicio(){
+  const p=hojePeriodo(), gs=gastosPeriodo(p);
+  const total=gs.reduce((s,g)=>s+Number(g.valor),0);
+  const orcamento=categorias.reduce((s,c)=>s+Number(c.planejado||0),0);
+  const restante=orcamento-total;
+  const hoje=new Date();
+  const fim=new Date(p.fim);
+  const diff=Math.ceil((fim-hoje)/(1000*60*60*24));
+  const dias=Math.max(1,diff+1);
+  const porDia=restante/dias;
+  const percentual=orcamento>0?(total/orcamento)*100:0;
 
-  const termo=(document.getElementById("pesquisaCategorias")?.value||"").trim().toLowerCase();
-  let html="";
+  document.getElementById("periodoAtual").textContent=dataBR(iso(p.inicio))+" a "+dataBR(iso(p.fim));
+  document.getElementById("totalAtual").textContent=moeda(total);
+  document.getElementById("orcamentoAtual").textContent=moeda(orcamento);
+  document.getElementById("restanteAtual").textContent=moeda(restante);
+  document.getElementById("disponivelFechamento").textContent=moeda(restante);
+  document.getElementById("disponivelDia").textContent=moeda(Math.max(0,porDia));
+  document.getElementById("progressoOrcamento").style.width=Math.min(100,Math.max(0,percentual))+"%";
+  document.getElementById("percentualOrcamento").textContent=percentual.toFixed(1).replace(".",",")+"% do orçamento utilizado";
+  document.getElementById("diasRestantes").textContent=dias+" dia"+(dias===1?"":"s");
 
-  categorias.forEach((c,i)=>{
-    if(termo && !c.nome.toLowerCase().includes(termo)) return;
+  const status=document.getElementById("statusOrcamento");
+  const msg=document.getElementById("mensagemPlanejamento");
+  status.className="title";
+  msg.className="list-item";
 
-    html+=`
-    <div class="categoria-card" id="categoria-card-${i}">
-      <div class="categoria-card-topo">
+  if(restante<0){
+    status.textContent="Orçamento ultrapassado";
+    status.classList.add("status-estourado");
+    msg.classList.add("estourado");
+    msg.innerHTML=`<div class="title">⚠️ Você ultrapassou o planejado em ${moeda(Math.abs(restante))}</div>
+      <div class="muted">Revise os próximos gastos ou ajuste o planejamento das categorias.</div>`;
+  }else if(percentual>=85){
+    status.textContent="Atenção ao limite";
+    status.classList.add("status-alerta");
+    msg.classList.add("alerta");
+    msg.innerHTML=`<div class="title">🟡 Restam ${moeda(restante)} até o fechamento</div>
+      <div class="muted">Para manter o planejamento, procure gastar até ${moeda(Math.max(0,porDia))} por dia.</div>`;
+  }else{
+    status.textContent="Tudo dentro do planejado";
+    status.classList.add("status-ok");
+    msg.innerHTML=`<div class="title">🟢 Você ainda pode gastar ${moeda(restante)}</div>
+      <div class="muted">Média disponível de ${moeda(Math.max(0,porDia))} por dia até o fechamento.</div>`;
+  }
+
+  document.getElementById("categoriasAtual").innerHTML=categorias.map(c=>{
+    const totalCat=gs.filter(g=>g.categoria===c.nome).reduce((s,g)=>s+Number(g.valor),0);
+    const restanteCat=Number(c.planejado||0)-totalCat;
+    const pct=Math.min(100,c.planejado?totalCat/c.planejado*100:0);
+    return `<div class="list-item">
+      <div class="row">
         <div>
-          <div class="categoria-card-nome">${c.nome}</div>
-          <div class="categoria-card-legenda">Valor planejado</div>
+          <div class="title">${c.nome}</div>
+          <div class="muted">Planejado: ${moeda(c.planejado)}</div>
+          <div class="muted">Restante: ${moeda(restanteCat)}</div>
         </div>
-        <div class="categoria-card-valor">${moeda(c.planejado)}</div>
+        <div class="value">${moeda(totalCat)}</div>
       </div>
+      <div class="progress"><span style="width:${pct}%"></span></div>
+    </div>`;
+  }).join("")||'<div class="empty">Sem categorias.</div>';
 
-      <div class="categoria-card-acoes">
-        <button class="editar" onclick="abrirEdicaoCategoria(${i})">✏️ Editar</button>
-        <button class="excluir" onclick="excluirCategoria(${i})">🗑️ Excluir</button>
-      </div>
+  renderProximas();
+}
 
-      <div id="categoria-edicao-${i}" class="categoria-edicao" style="display:none">
-        <label>Nome da categoria</label>
-        <input id="categoria-nome-${i}" value="${c.nome.replace(/"/g,'&quot;')}">
+function renderProximas(){
+  const atual=hojePeriodo();
+  let html="";
+  for(let i=1;i<=4;i++){
+    const inicio=new Date(atual.inicio.getFullYear(),atual.inicio.getMonth()+i,atual.inicio.getDate());
+    const fim=new Date(inicio.getFullYear(),inicio.getMonth()+1,Number(config.diaFechamento||13));
+    const p={inicio,fim}, total=gastosPeriodo(p).reduce((s,g)=>s+Number(g.valor),0);
+    html+=`<div class="list-item" onclick="abrirFatura('${iso(inicio)}','${iso(fim)}')"><div class="row"><div><div class="title">${dataBR(iso(inicio))} a ${dataBR(iso(fim))}</div><div class="muted">Toque para abrir</div></div><div class="value">${moeda(total)}</div></div></div>`;
+  }
+  document.getElementById("proximasFaturas").innerHTML=html;
+}
 
-        <label>Planejado R$</label>
-        <input id="categoria-planejado-${i}" type="number" step="0.01" value="${Number(c.planejado||0)}">
+function abrirFatura(inicio,fim){
+  const p={inicio:new Date(inicio+"T00:00:00"),fim:new Date(fim+"T00:00:00")}, gs=gastosPeriodo(p);
+  const grupos={};
+  gs.forEach(g=>{(grupos[g.categoria]??=[]).push(g)});
+  let conteudo=`<button class="back" onclick="mostrarSecao('relatorio',document.querySelector('[data-sec=&quot;relatorio&quot;]'))">← Voltar</button><div class="card"><h2>Fatura ${dataBR(inicio)} a ${dataBR(fim)}</h2>`;
+  conteudo+=Object.keys(grupos).length?Object.entries(grupos).map(([cat,itens])=>`<div class="list-item" onclick='abrirCategoria(${JSON.stringify(cat)},${JSON.stringify(inicio)},${JSON.stringify(fim)})'><div class="row"><div><div class="title">${cat}</div><div class="muted">${itens.length} compra(s)</div></div><div class="value">${moeda(itens.reduce((s,g)=>s+Number(g.valor),0))}</div></div></div>`).join(""):'<div class="empty">Nenhum gasto nesta fatura.</div>';
+  conteudo+="</div>";
+  document.getElementById("detalheConteudo").innerHTML=conteudo;
+  mostrarSecao("detalhe");
+}
 
-        <div class="categoria-edicao-acoes">
-          <button onclick="salvarEdicaoCategoria(${i})">Salvar</button>
-          <button class="sec" onclick="cancelarEdicaoCategoria(${i})">Cancelar</button>
+function abrirCategoria(cat,inicio,fim,filtro="todos"){
+  const p={inicio:new Date(inicio+"T00:00:00"),fim:new Date(fim+"T23:59:59")};
+  const hoje=new Date(); hoje.setHours(0,0,0,0);
+
+  const todos=gastosPeriodo(p)
+    .filter(g=>g.categoria===cat)
+    .sort((a,b)=>a.data.localeCompare(b.data));
+
+  const ehProgramado=g=>new Date(g.data+"T00:00:00")>hoje;
+  const lancados=todos.filter(g=>!ehProgramado(g));
+  const programados=todos.filter(ehProgramado);
+  const itens=filtro==="lancados"?lancados:filtro==="programados"?programados:todos;
+  const soma=arr=>arr.reduce((s,g)=>s+Number(g.valor||0),0);
+
+  const lista=itens.length?itens.map(g=>{
+    const programado=ehProgramado(g);
+    return `<div class="list-item" onclick="abrirCompra('${g.grupoId}','${g.data}')">
+      <div class="row">
+        <div>
+          <div class="title">${g.descricao}</div>
+          <div class="muted">${dataBR(g.data)} ${g.parcelado?`• Parcela ${g.parcelaAtual}/${g.totalParcelas}`:''}</div>
+          <span class="expense-status ${programado?'scheduled':'posted'}">${programado?'⏳ Programado':'✓ Lançado'}</span>
         </div>
+        <div class="value">${moeda(g.valor)}</div>
       </div>
     </div>`;
-  });
+  }).join(""):'<div class="empty">Nenhum gasto encontrado neste filtro.</div>';
 
-  area.innerHTML=html||'<div class="alerta atencao">Nenhuma categoria encontrada.</div>';
+  document.getElementById("detalheConteudo").innerHTML=`
+    <button class="back" onclick="abrirFatura('${inicio}','${fim}')">← Voltar</button>
+    <div class="card">
+      <h2>${cat}</h2>
+      <div class="muted">${dataBR(inicio)} a ${dataBR(fim)}</div>
+
+      <div class="category-filter-bar">
+        <button class="category-filter-btn ${filtro==='lancados'?'active':''}" onclick='abrirCategoria(${JSON.stringify(cat)},${JSON.stringify(inicio)},${JSON.stringify(fim)},"lancados")'>Lançados</button>
+        <button class="category-filter-btn ${filtro==='programados'?'active':''}" onclick='abrirCategoria(${JSON.stringify(cat)},${JSON.stringify(inicio)},${JSON.stringify(fim)},"programados")'>Programados</button>
+        <button class="category-filter-btn ${filtro==='todos'?'active':''}" onclick='abrirCategoria(${JSON.stringify(cat)},${JSON.stringify(inicio)},${JSON.stringify(fim)},"todos")'>Todos</button>
+      </div>
+
+      <div class="category-summary">
+        <div class="summary-box"><div class="summary-label">Lançados</div><div class="summary-value">${moeda(soma(lancados))}</div></div>
+        <div class="summary-box"><div class="summary-label">Programados</div><div class="summary-value">${moeda(soma(programados))}</div></div>
+        <div class="summary-box"><div class="summary-label">Total do período</div><div class="summary-value">${moeda(soma(todos))}</div></div>
+      </div>
+
+      ${lista}
+    </div>`;
+  mostrarSecao("detalhe");
 }
 
-function abrirEdicaoCategoria(i){
-  const painel=document.getElementById("categoria-edicao-"+i);
-  if(painel)painel.style.display="block";
+function abrirCompra(grupoId,data){
+  const idx=gastos.findIndex(g=>g.grupoId===grupoId&&g.data===data), g=gastos[idx];
+  if(!g)return;
+  document.getElementById("detalheConteudo").innerHTML=`<button class="back" onclick="renderHistorico();mostrarSecao('historico',document.querySelector('[data-sec="historico"]'))">← Voltar</button><div class="card"><h2>${g.descricao}</h2><p><b>Data:</b> ${dataBR(g.data)}</p><p><b>Categoria:</b> ${g.categoria}</p><p><b>Valor:</b> ${moeda(g.valor)}</p><p><b>Parcelas:</b> ${g.parcelaAtual}/${g.totalParcelas}</p><div class="actions"><button class="btn-danger" onclick="excluirCompra(${idx})">Excluir</button></div></div>`;
+  mostrarSecao("detalhe");
 }
 
-function cancelarEdicaoCategoria(i){
-  const painel=document.getElementById("categoria-edicao-"+i);
-  if(painel)painel.style.display="none";
+function excluirCompra(idx){if(confirm("Excluir este lançamento?")){gastos.splice(idx,1);salvarTudo();renderInicio();mostrarSecao("inicio",document.querySelector('[data-sec="inicio"]'))}}
+
+function renderHistorico(){
+  const termo=(document.getElementById("busca")?.value||"").toLowerCase();
+  const lista=[...gastos].sort((a,b)=>b.data.localeCompare(a.data)).filter(g=>(g.descricao+" "+g.categoria).toLowerCase().includes(termo));
+  document.getElementById("historicoLista").innerHTML=lista.map(g=>`<div class="list-item" onclick="abrirCompra('${g.grupoId}','${g.data}')"><div class="row"><div><div class="title">${g.descricao}</div><div class="muted">${dataBR(g.data)} • ${g.categoria}</div></div><div class="value">${moeda(g.valor)}</div></div></div>`).join("")||'<div class="empty">Nenhum lançamento.</div>';
 }
 
-function salvarEdicaoCategoria(i){
-  const nome=document.getElementById("categoria-nome-"+i).value.trim();
-  const planejado=Number(document.getElementById("categoria-planejado-"+i).value)||0;
+function renderRelatorio(){
+  const atual=hojePeriodo();
+  const gs=gastosPeriodo(atual);
 
-  if(!nome){
-    alert("Digite o nome da categoria.");
-    return;
+  document.getElementById("relatorioCategoriasPeriodo").innerHTML=categorias.map(c=>{
+    const total=gs.filter(g=>g.categoria===c.nome).reduce((s,g)=>s+Number(g.valor),0);
+    const pct=Math.min(100,c.planejado?total/c.planejado*100:0);
+    return `<div class="list-item" onclick='abrirCategoria(${JSON.stringify(c.nome)},${JSON.stringify(iso(atual.inicio))},${JSON.stringify(iso(atual.fim))})'>
+      <div class="row">
+        <div>
+          <div class="title">${c.nome}</div>
+          <div class="muted">Toque para ver as compras desta categoria</div>
+        </div>
+        <div class="value">${moeda(total)}</div>
+      </div>
+      <div class="progress"><span style="width:${pct}%"></span></div>
+    </div>`;
+  }).join("");
+
+  let html="";
+  for(let i=0;i<4;i++){
+    const inicio=new Date(atual.inicio.getFullYear(),atual.inicio.getMonth()+i,atual.inicio.getDate());
+    const fim=new Date(inicio.getFullYear(),inicio.getMonth()+1,Number(config.diaFechamento||13));
+    const p={inicio,fim};
+    const total=gastosPeriodo(p).reduce((s,g)=>s+Number(g.valor),0);
+    html+=`<div class="list-item" onclick="abrirFatura('${iso(inicio)}','${iso(fim)}')">
+      <div class="row">
+        <div>
+          <div class="muted">${i===0?"Fatura atual":"Próxima fatura"}</div>
+          <div class="title">${dataBR(iso(inicio))} a ${dataBR(iso(fim))}</div>
+        </div>
+        <div class="value">${moeda(total)}</div>
+      </div>
+    </div>`;
   }
-
-  if(categorias.some((c,idx)=>idx!==i && c.nome.toLowerCase()===nome.toLowerCase())){
-    alert("Já existe uma categoria com esse nome.");
-    return;
-  }
-
-  const antigo=categorias[i].nome;
-  categorias[i].nome=nome;
-  categorias[i].planejado=planejado;
-
-  gastos.forEach(g=>{
-    if(g.categoria===antigo)g.categoria=nome;
-  });
-
-  salvar();
-  atualizarTudo();
+  document.getElementById("relatorioFaturas").innerHTML=html;
 }
 
-function atualizarTudo(){
-atualizarSelects();
-let gf=gastosFatura(),total=gf.reduce((s,g)=>s+Number(g.valor),0),planejado=categorias.reduce((s,c)=>s+Number(c.planejado||0),0),saldo=planejado-total,p=periodo();
-let hoje=new Date(),dias=Math.max(0,Math.ceil((p.fim-hoje)/(1000*60*60*24))),porDia=dias>0&&saldo>0?saldo/dias:0;
-let perc=planejado>0?Math.round(total/planejado*100):0;
-document.getElementById("subtitulo").innerText="Controle sua fatura de "+String(config.diaFechamento).padStart(2,"0")+" a "+String(config.diaFechamento).padStart(2,"0");
-document.getElementById("periodo").innerText="Fatura: "+p.ini.toLocaleDateString("pt-BR")+" até "+p.fim.toLocaleDateString("pt-BR");
-document.getElementById("totalFatura").innerText=moeda(total);document.getElementById("planejadoTotal").innerText=moeda(planejado);document.getElementById("saldoTotal").innerText=moeda(saldo);document.getElementById("diasFechamento").innerText=dias+" dias";document.getElementById("porDia").innerText=moeda(porDia);
-document.getElementById("barraTotal").style.width=Math.min(100,perc)+"%";document.getElementById("barraTotal").style.background=perc>=100?"#ef4444":perc>=80?"#f59e0b":"#22c55e";document.getElementById("usoTotalTexto").innerText=perc+"% do orçamento total";
-
-let tc=totalCat(),resumoFixo="",resumoValores="",alertas="",estouradas=0;
-categorias.forEach((c,indice)=>{
-  let gasto=tc[c.nome]||0;
-  let falta=Number(c.planejado||0)-gasto;
-  let uso=c.planejado>0?Math.round(gasto/c.planejado*100):0;
-  let classe=uso>=100?"vermelho":uso>=80?"amarelo":"verde";
-  let classeFalta=falta<0?"vermelho":"verde";
-  let linhaPar=indice%2===1?" linha-par":"";
-
-  if(uso>=100)estouradas++;
-
-  resumoFixo+=`<div class="resumo-linha-fixa">${c.nome}</div>`;
-  resumoValores+=`
-    <div class="resumo-celula${linhaPar}">${moeda(gasto)}</div>
-    <div class="resumo-celula${linhaPar}">${moeda(c.planejado)}</div>
-    <div class="resumo-celula ${classeFalta}${linhaPar}">${falta>=0?moeda(falta):"Estourou "+moeda(Math.abs(falta))}</div>
-    <div class="resumo-celula ${classe}${linhaPar}">${c.planejado>0?uso+"%":"-"}</div>`;
-
-  if(c.planejado>0&&uso>=100){
-    alertas+=`<div class="alerta perigo">🚨 ${c.nome} passou do planejado.</div>`;
-  }else if(c.planejado>0&&uso>=80){
-    alertas+=`<div class="alerta atencao">⚠️ ${c.nome} já usou ${uso}% do planejado.</div>`;
-  }
-});
-document.getElementById("resumoCategoriasFixas").innerHTML=resumoFixo;
-document.getElementById("resumoCategoriasValores").innerHTML=resumoValores;
-document.getElementById("alertas").innerHTML=alertas||'<div class="alerta ok">✅ Tudo dentro do planejado.</div>';
-
-let score=Math.max(0,100-Math.max(0,perc-70)-estouradas*10);
-document.getElementById("pontuacaoSaude").innerText=Math.round(score);
-document.getElementById("textoSaude").innerText=score>=85?"Excelente controle.":score>=65?"Atenção aos gastos.":"Cuidado, orçamento comprometido.";
-
-atualizarCategoriasCards();
-
-let termo=(document.getElementById("pesquisa")?.value||"").toLowerCase(),lista="";
-gf.filter(g=>g.descricao.toLowerCase().includes(termo)||g.categoria.toLowerCase().includes(termo)).sort((a,b)=>b.data.localeCompare(a.data)).forEach(g=>{let i=gastos.indexOf(g),par=g.totalParcelas>1?g.parcelaAtual+"/"+g.totalParcelas:"1x";lista+=`<tr><td>${new Date(g.data+"T00:00:00").toLocaleDateString("pt-BR")}</td><td>${g.descricao}</td><td>${g.categoria}</td><td>${par}</td><td>${moeda(g.valor)}</td><td><button class="danger" onclick="excluirGasto(${i})">X</button></td></tr>`});document.getElementById("listaGastos").innerHTML=lista;
-
-atualizarParcelados();atualizarGrafico();atualizarProximasFaturas();
+function preencherCategorias(){document.getElementById("fCat").innerHTML=categorias.map(c=>`<option>${c.nome}</option>`).join("")}
+function adicionarMes(data,n){const d=new Date(data+"T00:00:00");const dia=d.getDate();d.setDate(1);d.setMonth(d.getMonth()+n);const ultimo=new Date(d.getFullYear(),d.getMonth()+1,0).getDate();d.setDate(Math.min(dia,ultimo));return iso(d)}
+function adicionarGasto(){
+  const data=document.getElementById("fData").value, descricao=document.getElementById("fDesc").value.trim(), categoria=document.getElementById("fCat").value, valor=Number(document.getElementById("fValor").value), parcelas=Math.max(1,Number(document.getElementById("fParcelas").value||1));
+  if(!data||!descricao||!valor)return alert("Preencha data, descrição e valor.");
+  const grupoId="p"+Date.now();
+  for(let i=0;i<parcelas;i++)gastos.push({data:adicionarMes(data,i),descricao,categoria,valor,parcelado:parcelas>1,parcelaAtual:i+1,totalParcelas:parcelas,valorTotal:valor*parcelas,grupoId});
+  salvarTudo();alert("Gasto salvo.");document.getElementById("fDesc").value="";document.getElementById("fValor").value="";mostrarSecao("inicio",document.querySelector('[data-sec="inicio"]'));
 }
-function atualizarParcelados(){let grupos={};gastos.filter(g=>g.totalParcelas>1).forEach(g=>{if(!grupos[g.grupoId])grupos[g.grupoId]=[];grupos[g.grupoId].push(g)});let html="";Object.values(grupos).forEach(arr=>{arr.sort((a,b)=>a.parcelaAtual-b.parcelaAtual);let first=arr[0],totalParcelas=first.totalParcelas,total=first.valorTotal||arr.reduce((s,g)=>s+g.valor,0),restam=arr.filter(g=>new Date(g.data+"T00:00:00")>=new Date()).length,saldo=arr.filter(g=>new Date(g.data+"T00:00:00")>=new Date()).reduce((s,g)=>s+Number(g.valor),0);html+=`<tr><td>${first.descricao}</td><td>${moeda(total)}</td><td>${totalParcelas}x</td><td>${restam}</td><td>${moeda(saldo)}</td></tr>`});document.getElementById("listaParcelados").innerHTML=html||'<tr><td colspan="5">Nenhuma compra parcelada ativa.</td></tr>'}
-function atualizarGrafico(){let tc=totalCat();let max=Math.max(1,...Object.values(tc));let html="";categorias.forEach(c=>{let v=tc[c.nome]||0;if(v>0){html+=`<div class="grafico-linha"><div class="topo"><span>${c.nome}</span><b>${moeda(v)}</b></div><div class="barra-bg"><div class="barra" style="width:${Math.round(v/max*100)}%"></div></div></div>`}});document.getElementById("graficoCategorias").innerHTML=html||"<p class='info'>Sem gastos nesta fatura.</p>"}
-function atualizarProximasFaturas(){
-let html="";
-let base=new Date(document.getElementById("dataFiltro").value+"T00:00:00");
-for(let i=0;i<4;i++){
-let d=new Date(base.getFullYear(),base.getMonth()+i,base.getDate());
-let iso=d.toISOString().slice(0,10);
-let total=gastosFatura(iso).reduce((s,g)=>s+Number(g.valor),0);
-let p=periodo(iso);
-let titulo=i===0?"Fatura atual":"Próxima fatura";
-html+=`<div class="fatura-card">
-  <div>
-    <span>${titulo}</span>
-    <b>${p.ini.toLocaleDateString("pt-BR")} a ${p.fim.toLocaleDateString("pt-BR")}</b>
-  </div>
-  <div class="valor-previsto">${moeda(total)}</div>
-</div>`;
-}
-document.getElementById("proximasFaturas").innerHTML=html;
-}
-function simular(){let valor=Number(document.getElementById("valorSimular").value),cat=document.getElementById("categoriaSimular").value,par=Number(document.getElementById("parcelasSimular").value)||1;if(valor<=0){alert("Digite um valor.");return}let parcela=valor/par,tc=totalCat(),c=categorias.find(x=>x.nome===cat),saldoCat=(c.planejado||0)-((tc[cat]||0)+parcela);document.getElementById("resultadoSimulacao").innerHTML=saldoCat>=0?`<div class="alerta ok">✅ Cabe na fatura atual. Primeira parcela: ${moeda(parcela)}. Restará ${moeda(saldoCat)} na categoria.</div>`:`<div class="alerta perigo">⚠️ A primeira parcela ultrapassa a categoria em ${moeda(Math.abs(saldoCat))}.</div>`}
-function exportarCSV(){let csv="Data;Descrição;Categoria;Parcela;Valor\n";gastos.forEach(g=>csv+=`${g.data};${g.descricao};${g.categoria};${g.totalParcelas>1?g.parcelaAtual+"/"+g.totalParcelas:"1x"};${String(g.valor).replace(".",",")}\n`);let blob=new Blob([csv],{type:"text/csv;charset=utf-8;"});let a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="fatura_facil.csv";a.click()}
-function apagarGastos(){if(confirm("Apagar todos os gastos?")){gastos=[];salvar();atualizarTudo()}}
-function baixarBackup(){let dados={categorias,gastos,config,geradoEm:new Date().toISOString()};let blob=new Blob([JSON.stringify(dados,null,2)],{type:"application/json"});let a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="backup_fatura_facil.json";a.click()}
-function restaurarBackup(e){let file=e.target.files[0];if(!file)return;let r=new FileReader();r.onload=function(){try{let d=JSON.parse(r.result);if(d.categorias&&d.gastos&&d.config){categorias=d.categorias;gastos=d.gastos;config=d.config;salvar();iniciarDias();atualizarTudo();alert("Backup restaurado com sucesso.")}else alert("Arquivo de backup inválido.")}catch(err){alert("Erro ao restaurar backup.")}};r.readAsText(file)}
-document.getElementById("dataFiltro").addEventListener("change",atualizarTudo);
-iniciarDias();iniciarParcelas();atualizarTudo();
-if("serviceWorker" in navigator){navigator.serviceWorker.register("service-worker.js")}
+function renderConfig(){document.getElementById("diaFechamento").value=config.diaFechamento||13}
+function salvarConfig(){config.diaFechamento=Number(document.getElementById("diaFechamento").value||13);salvarTudo();renderInicio();alert("Configuração salva.")}
+function baixarBackup(){const blob=new Blob([JSON.stringify({categorias,gastos,config,geradoEm:new Date().toISOString()},null,2)],{type:"application/json"});const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="backup_fatura_facil.json";a.click();URL.revokeObjectURL(a.href)}
+function restaurarBackup(ev){const f=ev.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{try{const b=JSON.parse(r.result);categorias=b.categorias||[];gastos=b.gastos||[];config=b.config||{diaFechamento:13};salvarTudo();preencherCategorias();renderInicio();alert("Backup restaurado.")}catch(e){alert("Arquivo inválido.")}};r.readAsText(f)}
+
+document.getElementById("fData").value=iso(new Date());
+preencherCategorias();renderConfig();renderInicio();renderHistorico();renderRelatorio();
+if("serviceWorker" in navigator)navigator.serviceWorker.register("service-worker.js").catch(()=>{});
 </script>
 </body>
 </html>

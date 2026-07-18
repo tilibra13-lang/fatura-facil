@@ -1,0 +1,16 @@
+Fatura Fácil V3.6
+
+Novidade:
+- Dentro de cada categoria há três filtros: Lançados, Programados e Todos.
+- A separação respeita a fatura selecionada.
+- Gastos com data futura aparecem como Programados.
+- Parcelas futuras aparecem na próxima fatura correspondente.
+- A tela mostra os totais lançado, programado e geral.
+
+Para publicar, substitua no GitHub:
+index.html
+manifest.json
+service-worker.js
+
+Abra depois:
+https://tilibra13-lang.github.io/fatura-facil/?v=36
