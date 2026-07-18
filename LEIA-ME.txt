@@ -1,17 +1,20 @@
-Fatura Fácil V3.7
+Fatura Fácil V3.7.1 — Correção de atualização
 
-- Restaurada a edição de categorias.
-- Restaurada a edição do gasto planejado por categoria.
-- Ao renomear uma categoria, os gastos existentes são atualizados.
-- Nova categoria pode ser criada.
-- Exclusão é bloqueada quando ainda existem gastos vinculados.
-- Corrigida a sobreposição de textos e valores em Fatura > Categorias.
-- Mantidos Lançados, Programados e Todos.
+Esta versão:
+- limpa automaticamente o cache das versões anteriores;
+- restaura edição de categorias;
+- restaura gasto planejado por categoria;
+- mantém filtros de lançados, programados e todos;
+- corrige textos longos na tela de faturas;
+- mostra V3.7.1 na tela Configurações para confirmar a atualização.
 
-Publicar no GitHub:
-index.html
-manifest.json
-service-worker.js
+IMPORTANTE:
+No GitHub, extraia o ZIP e substitua os três arquivos na raiz:
+1. index.html
+2. manifest.json
+3. service-worker.js
 
-Abrir:
-https://tilibra13-lang.github.io/fatura-facil/?v=37
+Não envie apenas o arquivo ZIP para o repositório.
+
+Depois abra:
+https://tilibra13-lang.github.io/fatura-facil/?v=371
